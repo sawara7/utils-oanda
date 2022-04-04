@@ -9,12 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const apiv20_1 = require("./apiv20");
-const api = new apiv20_1.oaAPIClass({
-    apiToken: "",
-    accountID: ""
-});
+const __1 = require("..");
 (() => __awaiter(void 0, void 0, void 0, function* () {
+    const api = yield (0, __1.getOandaAPI)("sawara");
     try {
         const res3 = yield api.getPricing({ instruments: 'USD_JPY' });
         console.log(res3);
@@ -34,6 +31,6 @@ const api = new apiv20_1.oaAPIClass({
         // console.log(res);
     }
     catch (e) {
-        // console.log((e as ApiError).message, (e as ApiError).data)
+        console.log(e.message, e.data);
     }
 }))();

@@ -1,13 +1,10 @@
 import {
-    oaAPIClass
-} from "./apiv20"
-
-const api = new oaAPIClass({
-    apiToken: "",
-    accountID: ""
-});
+    getOandaAPI
+} from ".."
+import { ApiError } from "./api";
 
 (async()=>{
+    const api = await getOandaAPI("sawara")
     try{
         const res3 = await api.getPricing({instruments: 'USD_JPY'});
         console.log(res3);
@@ -29,7 +26,7 @@ const api = new oaAPIClass({
         // console.log(price);
         // console.log(res);
     }catch(e){
-        // console.log((e as ApiError).message, (e as ApiError).data)
+        console.log((e as ApiError).message, (e as ApiError).data)
     }
     
 })()

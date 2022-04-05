@@ -80,7 +80,7 @@ class SinglePosition {
                 }
             }
             const res = yield this._api.postOrder(p);
-            this._ID = res.lastTransactionID;
+            this._ID = res.orderCreateTransaction.id;
         });
     }
     open() {

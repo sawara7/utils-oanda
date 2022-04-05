@@ -128,7 +128,6 @@ export class SinglePosition {
         }
         const res = await this._api.postOrder(p)
         this._ID = res.lastTransactionID
-        console.log(this._ID)
     }
 
     public async open(): Promise<SinglePositionResponse> {

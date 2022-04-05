@@ -11,15 +11,16 @@ import { SinglePosition } from "./singlePosition";
         const res1 = await api.getPricing({instruments: pair});
         console.log(res1);
         
-        // const res2 = await api.getOpenTrade();
-        // console.log(res2);
+        const res2 = await api.getOpenTrade();
+        console.log(res2);
 
         const res = await api.getPendingOrders();
         console.log(res)
         const ids: string[] = []
         for (const o of res.orders){
-            ids.push(o.id)
+            api.cancelOrder(o.id)
         }
+
         // const req: LimitOrderRequest = {
         //     type: 'LIMIT',
         //     instrument: pair,

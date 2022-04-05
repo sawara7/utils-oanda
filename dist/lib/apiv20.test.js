@@ -17,13 +17,13 @@ const singlePosition_1 = require("./singlePosition");
     try {
         const res1 = yield api.getPricing({ instruments: pair });
         console.log(res1);
-        // const res2 = await api.getOpenTrade();
-        // console.log(res2);
+        const res2 = yield api.getOpenTrade();
+        console.log(res2);
         const res = yield api.getPendingOrders();
         console.log(res);
         const ids = [];
         for (const o of res.orders) {
-            ids.push(o.id);
+            api.cancelOrder(o.id);
         }
         // const req: LimitOrderRequest = {
         //     type: 'LIMIT',

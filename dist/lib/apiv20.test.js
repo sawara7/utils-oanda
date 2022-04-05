@@ -11,14 +11,30 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const __1 = require("..");
 (() => __awaiter(void 0, void 0, void 0, function* () {
-    const api = yield (0, __1.getOandaAPI)("sawara");
+    const pair = 'USD_JPY';
+    const api = yield (0, __1.getOandaAPI)("Primary");
     try {
-        const res3 = yield api.getPricing({ instruments: 'USD_JPY' });
-        console.log(res3);
-        const res = yield api.getPendingOrders();
-        console.log(res);
-        const res2 = yield api.cancelOrder('27519');
+        const res1 = yield api.getPricing({ instruments: pair });
+        console.log(res1);
+        const res2 = yield api.getOpenTrade();
         console.log(res2);
+        const req = {
+            type: 'LIMIT',
+            instrument: pair,
+            units: 1,
+            positionFill: 'DEFAULT',
+            takeProfitOnFill: {
+                price: '121',
+                timeInForce: 'GTC'
+                // gtdTime?: number
+            },
+            price: '120',
+            // gtdTime: Date.now() + 24*60*60*1000,
+            triggerCondition: 'DEFAULT'
+        };
+        const res3 = yield api.postOrder(req);
+        // const res2 = await api.cancelOrder('27519');
+        // console.log(res2);
         // const res = await api.getInstruments();
         // // const price = await
         // res.instruments.forEach(element => {

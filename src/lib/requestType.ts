@@ -41,7 +41,7 @@ export interface MarketOrderRequest extends BaseOrderRequest{
 export interface LimitOrderRequest extends BaseOrderRequest{
   price: string,
   timeInForce?: TimeInForce,
-  gtdTime: number,
+  gtdTime?: string,
   triggerCondition: OrderTriggerCondition,
 }
 export interface StopOrderRequest extends BaseOrderRequest{

@@ -161,5 +161,53 @@ export const TransactionTypes = [
 
 export type TransactionType = typeof TransactionTypes[number];
 
-
 export type OrderFillReason = string;
+
+export interface wsTrade {
+  id: number;
+  time: string;
+  side: string;
+  size: number;
+  price: number;
+  liquidation: boolean;
+}
+
+export interface wsTicker {
+  time: string;
+  bid: number;
+  ask: number;
+  last: number;
+}
+
+export interface wsFill {
+  fee: number //78.05799225,
+  feeRate: number //0.0014,
+  future: string //BTC-PERP,
+  id: number //7828307,
+  liquidity: string //taker,
+  market: string //BTC-PERP,
+  orderId: number //38065410,
+  tradeId: number //19129310,
+  price: number //3723.75,
+  side: string //buy,
+  size: number //14.973,
+  time: string //2019-05-07T16:40:58.358438+00:00,
+  type: string //order
+}
+
+export interface wsOrder {
+  id: number //24852229,
+  clientId?: string //null,
+  market: string //XRP-PERP,
+  type: string //limit,
+  side: string //buy,
+  size: number //42353.0,
+  price: number //0.2977,
+  reduceOnly: boolean //false,
+  ioc: boolean //false,
+  postOnly: boolean //false,
+  status: string //closed,
+  filledSize: number //0.0,
+  remainingSize: number //0.0,
+  avgFillPrice: number //0.2978
+}

@@ -18,3 +18,48 @@ export declare type oandaPair = typeof oandaPairs[number];
 export declare const TransactionTypes: readonly ["ORDER", "FUNDING", "ADMIN", "CREATE", "CLOSE", "REOPEN", "ORDER_FILL", "DAILY_FINANCING", "RESET_RESETTAB"];
 export declare type TransactionType = typeof TransactionTypes[number];
 export declare type OrderFillReason = string;
+export interface wsTrade {
+    id: number;
+    time: string;
+    side: string;
+    size: number;
+    price: number;
+    liquidation: boolean;
+}
+export interface wsTicker {
+    time: string;
+    bid: number;
+    ask: number;
+    last: number;
+}
+export interface wsFill {
+    fee: number;
+    feeRate: number;
+    future: string;
+    id: number;
+    liquidity: string;
+    market: string;
+    orderId: number;
+    tradeId: number;
+    price: number;
+    side: string;
+    size: number;
+    time: string;
+    type: string;
+}
+export interface wsOrder {
+    id: number;
+    clientId?: string;
+    market: string;
+    type: string;
+    side: string;
+    size: number;
+    price: number;
+    reduceOnly: boolean;
+    ioc: boolean;
+    postOnly: boolean;
+    status: string;
+    filledSize: number;
+    remainingSize: number;
+    avgFillPrice: number;
+}

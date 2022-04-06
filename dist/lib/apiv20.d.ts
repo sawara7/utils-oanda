@@ -1,6 +1,6 @@
 import { baseApiClass, ApiOptions } from './api';
-import { PricingResponse, oaOrderResponse, InstrumentsResponse, GetTradeResponse, GetTransactionsSinceIDResponse, PendingOrderResponse, oaCancelOrderResponse } from './responseType';
-import { GetPricingRequest, GetTradeRequest, GetTransactionsSinceIDRequest, BaseOrderRequest } from './requestType';
+import { PricingResponse, oaOrderResponse, InstrumentsResponse, GetTradeResponse, GetTransactionsSinceIDResponse, PendingOrderResponse, oaCancelOrderResponse, OrderResponse } from './responseType';
+import { GetPricingRequest, GetTradeRequest, GetTransactionsSinceIDRequest, BaseOrderRequest, GetOrderRequest } from './requestType';
 import { OANDAApiConfig } from './type';
 export declare class oaAPIClass extends baseApiClass {
     private readonly apiToken;
@@ -10,6 +10,7 @@ export declare class oaAPIClass extends baseApiClass {
     private getPath;
     postOrder(request: BaseOrderRequest): Promise<oaOrderResponse>;
     cancelOrder(orderID: string): Promise<oaCancelOrderResponse>;
+    getOrders(request: GetOrderRequest): Promise<OrderResponse>;
     getPendingOrders(): Promise<PendingOrderResponse>;
     getTransactionsSinceID(request: GetTransactionsSinceIDRequest): Promise<GetTransactionsSinceIDResponse>;
     getTrade(request: GetTradeRequest): Promise<GetTradeResponse>;

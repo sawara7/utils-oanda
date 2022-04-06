@@ -196,16 +196,12 @@ export interface wsFill {
 }
 
 export interface wsOrder {
-  id: number //24852229,
-  clientId?: string //null,
+  id: string //24852229,
   market: string //XRP-PERP,
   type: string //limit,
   side: string //buy,
   size: number //42353.0,
   price: number //0.2977,
-  reduceOnly: boolean //false,
-  ioc: boolean //false,
-  postOnly: boolean //false,
   status: string //closed,
   filledSize: number //0.0,
   remainingSize: number //0.0,

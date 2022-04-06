@@ -48,16 +48,12 @@ export interface wsFill {
     type: string;
 }
 export interface wsOrder {
-    id: number;
-    clientId?: string;
+    id: string;
     market: string;
     type: string;
     side: string;
     size: number;
     price: number;
-    reduceOnly: boolean;
-    ioc: boolean;
-    postOnly: boolean;
     status: string;
     filledSize: number;
     remainingSize: number;

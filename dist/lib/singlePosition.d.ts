@@ -1,5 +1,5 @@
 import { OrderSide, OrderType } from "my-utils";
-import { oaAPIClass } from "..";
+import { oaAPIClass, oaBasicOrder } from "..";
 export interface SinglePositionParameters {
     marketName: string;
     funds: number;
@@ -34,9 +34,8 @@ export declare class SinglePosition {
     private _openPrice;
     private _closePrice;
     private _openSide;
-    private _ID;
-    private _openTime;
-    private _closeTime;
+    private _openID;
+    private _closeID;
     private _sizeResolution;
     private _priceResolution;
     private _closeCount;
@@ -48,9 +47,10 @@ export declare class SinglePosition {
     constructor(params: SinglePositionParameters);
     private roundSize;
     private roundPrice;
-    private placeTakeProfitOrder;
+    private placeOrder;
     open(): Promise<SinglePositionResponse>;
-    close(): void;
+    close(): Promise<SinglePositionResponse>;
+    updateOrder(order: oaBasicOrder): void;
     get profit(): number;
     get enabledOpen(): Boolean;
     get openOrderSettings(): OrderSettings | undefined;
@@ -59,5 +59,5 @@ export declare class SinglePosition {
     get currentOpenPrice(): number;
     get currentClosePrice(): number;
     get closeCount(): number;
-    get id(): string;
+    get activeID(): string;
 }

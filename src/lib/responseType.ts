@@ -43,6 +43,11 @@ export interface oaCancelOrderResponse {
   lastTransactionID: string
 }
 
+export interface OrderResponse {
+  orders: oaBaseOrder[],
+  lastTransactionID: string
+}
+
 export interface PendingOrderResponse {
   orders: oaBaseOrder[],
   lastTransactionID: string

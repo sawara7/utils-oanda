@@ -18,9 +18,8 @@ class SinglePosition {
         this._openPrice = 0;
         this._closePrice = 0;
         this._openSide = 'buy';
-        this._ID = '0';
-        this._openTime = 0;
-        this._closeTime = 0;
+        this._openID = '0';
+        this._closeID = '0';
         // Information
         this._closeCount = 0;
         this._cumulativeProfit = 0;
@@ -45,22 +44,14 @@ class SinglePosition {
     roundPrice(price) {
         return Math.round(price * (1 / this._priceResolution)) / (1 / this._priceResolution);
     }
-    placeTakeProfitOrder(side, size, openPrice, closePrice) {
+    placeOrder(side, size, price) {
         return __awaiter(this, void 0, void 0, function* () {
-            this._openSide = side;
-            this._initialSize = this.roundSize(size);
-            this._openPrice = this.roundPrice(openPrice);
-            this._closePrice = this.roundPrice(closePrice);
             const p = {
                 type: 'LIMIT',
                 instrument: this._marketName,
-                units: this._initialSize * (side === 'buy' ? 1 : -1),
+                units: this.roundSize(size) * (side === 'buy' ? 1 : -1),
                 positionFill: 'DEFAULT',
-                takeProfitOnFill: {
-                    price: this._closePrice.toString(),
-                    timeInForce: 'GTC'
-                },
-                price: this._openPrice.toString(),
+                price: this.roundPrice(price).toString(),
                 triggerCondition: 'DEFAULT'
             };
             if (SinglePosition._lastOrderTime && SinglePosition._lastOrderTime[this._marketName]) {
@@ -79,8 +70,7 @@ class SinglePosition {
                     yield (0, my_utils_1.sleep)(SinglePosition._lastOrderTime[this._marketName] - Date.now());
                 }
             }
-            const res = yield this._api.postOrder(p);
-            this._ID = res.orderCreateTransaction.id;
+            return yield this._api.postOrder(p);
         });
     }
     open() {
@@ -88,37 +78,92 @@ class SinglePosition {
             if (!this._openOrderSettings || !this._closeOrderSettings) {
                 return { success: false, message: 'No open order settings.' };
             }
-            if (parseInt(this._ID) > 0) {
+            if (parseInt(this._openID) > 0) {
                 return { success: false, message: 'Position is already opened.' };
             }
             const result = {
                 success: false
             };
-            this._ID = '1'; // lock
+            this._openID = '1'; // lock
             try {
-                yield this.placeTakeProfitOrder(this._openOrderSettings.side, this._funds / this._openOrderSettings.price, this._openOrderSettings.price, this._closeOrderSettings.price);
+                const res = yield this.placeOrder(this._openOrderSettings.side, this._funds / this._openOrderSettings.price, this._openOrderSettings.price);
+                this._openID = res.orderCreateTransaction.id;
                 return { success: true };
             }
             catch (e) {
                 result.message = e;
-                this._ID = '0';
+                this._openID = '0';
             }
             return { success: false, message: 'Open Failed.' };
         });
     }
     close() {
-        this._ID = '0';
-        this._cumulativeProfit +=
-            this._initialSize * (this._openSide === 'buy' ?
-                this._closePrice - this._openPrice :
-                this._openPrice - this._closePrice);
-        this._closeCount++;
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this._closeOrderSettings || !this._closeOrderSettings) {
+                return { success: false, message: 'No close order settings.' };
+            }
+            if (parseInt(this._closeID) > 0) {
+                return { success: false, message: 'Position is already closed.' };
+            }
+            const result = {
+                success: false
+            };
+            this._closeID = '1'; // lock
+            try {
+                const res = yield this.placeOrder(this._closeOrderSettings.side, this._funds / this._closeOrderSettings.price, this._closeOrderSettings.price);
+                this._closeID = res.orderCreateTransaction.id;
+                return { success: true };
+            }
+            catch (e) {
+                result.message = e;
+                this._closeID = '0';
+            }
+            return { success: false, message: 'Open Failed.' };
+        });
+    }
+    updateOrder(order) {
+        if (order.id === this._openID) {
+            if (order.state === 'FILLED') {
+                this._initialSize = this.roundSize(Math.abs(parseFloat(order.units)));
+                this._openID = '0';
+                this._openSide = parseFloat(order.units) > 0 ? "buy" : "sell";
+                if (this.onOpened) {
+                    this.onOpened(this);
+                }
+            }
+            if (order.state === 'CANCELLED') {
+                this._openID = '0';
+                if (this.onOpenOrderCanceled) {
+                    this.onOpenOrderCanceled(this);
+                }
+            }
+        }
+        if (order.id === this._closeID) {
+            if (order.state === 'FILLED') {
+                const size = this.roundSize(Math.abs(parseFloat(order.units)));
+                this._cumulativeProfit +=
+                    this._initialSize * (this._openSide === 'buy' ?
+                        this._closePrice - this._openPrice :
+                        this._openPrice - this._closePrice);
+                this._closeCount++;
+                this._closeID = '0';
+                if (this.onClosed) {
+                    this.onClosed(this);
+                }
+            }
+            if (order.state === 'CANCELLED') {
+                this._closeID = '0';
+                if (this.onCloseOrderCanceled) {
+                    this.onCloseOrderCanceled(this);
+                }
+            }
+        }
     }
     get profit() {
         return this._cumulativeProfit;
     }
     get enabledOpen() {
-        return this._ID === '0';
+        return this._openID === '0' && this._closeID === '0';
     }
     get openOrderSettings() {
         return this._openOrderSettings;
@@ -138,8 +183,14 @@ class SinglePosition {
     get closeCount() {
         return this._closeCount;
     }
-    get id() {
-        return this._ID;
+    get activeID() {
+        if (!['0', '1'].includes(this._openID)) {
+            return this._openID;
+        }
+        if (!['0', '1'].includes(this._closeID)) {
+            return this._closeID;
+        }
+        return '';
     }
 }
 exports.SinglePosition = SinglePosition;

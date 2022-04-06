@@ -8,18 +8,21 @@ import { SinglePosition } from "./singlePosition";
     const pair: oandaPair = 'USD_JPY'
     const api = await getOandaAPI("Primary")
     try{
-        const res1 = await api.getPricing({instruments: pair});
-        console.log(res1);
+        // const res1 = await api.getPricing({instruments: pair});
+        // console.log(res1);
         
-        const res2 = await api.getOpenTrade();
-        console.log(res2);
+        // const res2 = await api.getOpenTrade();
+        // console.log(res2);
 
-        const res = await api.getPendingOrders();
+        const res = await api.getOrders({
+            ids: "406314",
+            state: "FILLED"
+        })
         console.log(res)
-        const ids: string[] = []
-        for (const o of res.orders){
-            api.cancelOrder(o.id)
-        }
+        // const ids: string[] = []
+        // for (const o of res.orders){
+        //     api.cancelOrder(o.id)
+        // }
 
         // const req: LimitOrderRequest = {
         //     type: 'LIMIT',
@@ -37,26 +40,26 @@ import { SinglePosition } from "./singlePosition";
         // }
         // const res3 = await api.postOrder(req)
 
-        const pos = new SinglePosition({
-            marketName: 'USD_JPY',
-            funds: 1000,
-            api: api,
-            minOrderInterval: 200,
-            sizeResolution: 1,
-            priceResolution: 0.001,
-            openOrderSettings: {
-                side: 'buy',
-                type: 'limit',
-                price: 120
-            },
-            closeOrderSettings: {
-                side: 'sell',
-                type: 'limit',
-                price: 121
-            }
-        })
-        await pos.open()
-        console.log(pos.id)
+        // const pos = new SinglePosition({
+        //     marketName: 'USD_JPY',
+        //     funds: 1000,
+        //     api: api,
+        //     minOrderInterval: 200,
+        //     sizeResolution: 1,
+        //     priceResolution: 0.001,
+        //     openOrderSettings: {
+        //         side: 'buy',
+        //         type: 'limit',
+        //         price: 123.875
+        //     },
+        //     closeOrderSettings: {
+        //         side: 'sell',
+        //         type: 'limit',
+        //         price: 124.5
+        //     }
+        // })
+        // await pos.open()
+        // console.log(pos.id)
 
         // const res2 = await api.cancelOrder('27519');
         // console.log(res2);
@@ -72,6 +75,7 @@ import { SinglePosition } from "./singlePosition";
         // console.log(price);
         // console.log(res);
     }catch(e){
+        console.log("error")
         console.log((e as ApiError).message, (e as ApiError).data)
     }
     

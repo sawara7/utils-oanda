@@ -6,7 +6,9 @@ import {
 
 import {
     oaAPIClass,
-    LimitOrderRequest
+    LimitOrderRequest,
+    oaOrderResponse,
+    oaBasicOrder
 } from ".."
 
 export interface SinglePositionParameters {
@@ -50,9 +52,8 @@ export class SinglePosition {
     private _closePrice: number = 0
     private _openSide: OrderSide = 'buy'
 
-    private _ID: string = '0'
-    private _openTime: number = 0
-    private _closeTime: number = 0
+    private _openID: string = '0'
+    private _closeID: string = '0'
     private _sizeResolution: number
     private _priceResolution: number
 
@@ -91,25 +92,16 @@ export class SinglePosition {
         return Math.round(price * (1/this._priceResolution))/(1/this._priceResolution)
     }
 
-    private async placeTakeProfitOrder(
+    private async placeOrder(
         side: OrderSide,
         size: number,
-        openPrice: number,
-        closePrice: number) {
-        this._openSide = side
-        this._initialSize = this.roundSize(size)
-        this._openPrice = this.roundPrice(openPrice)
-        this._closePrice = this.roundPrice(closePrice)
+        price: number): Promise<oaOrderResponse> {
         const p: LimitOrderRequest = {
             type: 'LIMIT',
             instrument: this._marketName,
-            units: this._initialSize * (side === 'buy'? 1: -1),
+            units: this.roundSize(size) * (side === 'buy'? 1: -1),
             positionFill : 'DEFAULT',
-            takeProfitOnFill: {
-                price: this._closePrice.toString(),
-                timeInForce: 'GTC'
-            },
-            price: this._openPrice.toString(),
+            price: this.roundPrice(price).toString(),
             triggerCondition: 'DEFAULT'
         }
         if (SinglePosition._lastOrderTime && SinglePosition._lastOrderTime[this._marketName]) {
@@ -126,42 +118,96 @@ export class SinglePosition {
                 await sleep(SinglePosition._lastOrderTime[this._marketName] - Date.now())
             }
         }
-        const res = await this._api.postOrder(p)
-        this._ID = res.orderCreateTransaction.id
+        return await this._api.postOrder(p)
     }
 
     public async open(): Promise<SinglePositionResponse> {
         if (!this._openOrderSettings || !this._closeOrderSettings) {
             return {success: false, message:'No open order settings.'}
         }
-        if (parseInt(this._ID) > 0) {
+        if (parseInt(this._openID) > 0) {
             return {success: false, message:'Position is already opened.'}
         }
         const result: SinglePositionResponse = {
             success: false
         }
-        this._ID = '1' // lock
+        this._openID = '1' // lock
         try { 
-            await this.placeTakeProfitOrder(
+            const res = await this.placeOrder(
                 this._openOrderSettings.side,
                 this._funds/this._openOrderSettings.price,
-                this._openOrderSettings.price,
-                this._closeOrderSettings.price)
+                this._openOrderSettings.price)
+            this._openID = res.orderCreateTransaction.id
             return {success: true}
         } catch(e) {
             result.message = e
-            this._ID = '0'
+            this._openID = '0'
         }
         return {success: false, message:'Open Failed.'}
     }
     
-    public close() {
-        this._ID = '0'
-        this._cumulativeProfit +=
-            this._initialSize * (this._openSide === 'buy'?
-            this._closePrice - this._openPrice:
-            this._openPrice - this._closePrice)
-        this._closeCount++
+    public async close(): Promise<SinglePositionResponse> {
+        if (!this._closeOrderSettings || !this._closeOrderSettings) {
+            return {success: false, message:'No close order settings.'}
+        }
+        if (parseInt(this._closeID) > 0) {
+            return {success: false, message:'Position is already closed.'}
+        }
+        const result: SinglePositionResponse = {
+            success: false
+        }
+        this._closeID = '1' // lock
+        try { 
+            const res = await this.placeOrder(
+                this._closeOrderSettings.side,
+                this._funds/this._closeOrderSettings.price,
+                this._closeOrderSettings.price)
+            this._closeID = res.orderCreateTransaction.id
+            return {success: true}
+        } catch(e) {
+            result.message = e
+            this._closeID = '0'
+        }
+        return {success: false, message:'Open Failed.'}
+    }
+
+    public updateOrder(order: oaBasicOrder) {
+        if (order.id === this._openID) {
+            if (order.state === 'FILLED') {
+                this._initialSize = this.roundSize(Math.abs(parseFloat(order.units)))
+                this._openID = '0'
+                this._openSide = parseFloat(order.units)>0 ? "buy": "sell"
+                if (this.onOpened){
+                    this.onOpened(this)
+                }
+            }
+            if (order.state === 'CANCELLED') {
+                this._openID = '0'
+                if (this.onOpenOrderCanceled) {
+                    this.onOpenOrderCanceled(this)
+                }
+            }
+        }
+        if (order.id === this._closeID) {
+            if (order.state === 'FILLED') {
+                const size = this.roundSize(Math.abs(parseFloat(order.units)))
+                this._cumulativeProfit +=
+                    this._initialSize * (this._openSide === 'buy'?
+                    this._closePrice - this._openPrice:
+                    this._openPrice - this._closePrice)
+                this._closeCount++
+                this._closeID = '0'
+                if (this.onClosed){
+                    this.onClosed(this)
+                }
+            }
+            if (order.state === 'CANCELLED') {
+                this._closeID = '0'
+                if (this.onCloseOrderCanceled) {
+                    this.onCloseOrderCanceled(this)
+                }
+            }
+        }
     }
 
     get profit(): number {
@@ -169,7 +215,7 @@ export class SinglePosition {
     }
 
     get enabledOpen(): Boolean {
-        return  this._ID === '0'
+        return this._openID === '0' && this._closeID === '0'
     }
 
     get openOrderSettings(): OrderSettings | undefined {
@@ -196,7 +242,13 @@ export class SinglePosition {
         return this._closeCount
     }
 
-    get id(): string {
-        return this._ID
+    get activeID(): string {
+        if (!['0', '1'].includes(this._openID)){
+            return this._openID
+        }
+        if (!['0', '1'].includes(this._closeID)){
+            return this._closeID
+        }
+        return ''
     }
 }

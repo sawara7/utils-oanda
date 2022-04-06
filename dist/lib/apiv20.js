@@ -46,6 +46,10 @@ class oaAPIClass extends api_1.baseApiClass {
         const path = this.getPath('orders').concat('/', orderID, '/cancel');
         return this.put(path, {});
     }
+    getOrders(request) {
+        const path = this.getPath('orders');
+        return this.get(path, request);
+    }
     getPendingOrders() {
         const path = this.getPath('pendingOrders');
         return this.get(path, {});

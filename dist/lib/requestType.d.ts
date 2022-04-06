@@ -27,6 +27,13 @@ export interface BaseOrderRequest {
     guaranteedStopLossOnFill?: GuaranteedStopLossDetails;
     trailingStopLossOnFill?: TrailingStopLossDetails;
 }
+export interface GetOrderRequest {
+    ids: string;
+    state?: string;
+    instrument?: string;
+    count?: number;
+    beforeID?: string;
+}
 export interface MarketOrderRequest extends BaseOrderRequest {
     timeInForce?: TimeInForce;
     priceBound?: number;

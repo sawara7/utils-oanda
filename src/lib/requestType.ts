@@ -1,5 +1,5 @@
 import { TradeState } from "./responseType";
-import { oandaOrderType, OrderTriggerCondition, TransactionType } from "./type";
+import { oandaOrderType, oaOrderState, OrderTriggerCondition, TransactionType } from "./type";
 
 // Ticker
 export type AcceptDateTimeFormat = 'UNIX' | 'RFC3339';
@@ -34,6 +34,13 @@ export interface BaseOrderRequest {
   trailingStopLossOnFill?: TrailingStopLossDetails
 }
 
+export interface GetOrderRequest {
+  ids: string //query	List of OrderID (csv)	List of Order IDs to retrieve
+  state?: string //query	OrderStateFilter	The state to filter the requested Orders by [default=PENDING]
+  instrument?: string	//query	InstrumentName	The instrument to filter the requested orders by
+  count?: number //query	integer	The maximum number of Orders to return [default=50, maximum=500]
+  beforeID?: string	//query	OrderID	The maximum Order ID to return. If not provided the most recent Orders in the Account are returned
+}
 export interface MarketOrderRequest extends BaseOrderRequest{
   timeInForce?: TimeInForce,
   priceBound?: number,

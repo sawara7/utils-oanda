@@ -6,14 +6,15 @@ import {
   InstrumentsResponse,
   GetTradeResponse,
   GetTransactionsSinceIDResponse,
-  PendingOrderResponse, oaCancelOrderResponse
+  PendingOrderResponse, oaCancelOrderResponse, OrderResponse
 } from './responseType';
 import {
   GetPricingRequest,
   AcceptDateTimeFormat,
   GetTradeRequest,
   GetTransactionsSinceIDRequest,
-  BaseOrderRequest
+  BaseOrderRequest,
+  GetOrderRequest
 } from './requestType';
 import { OANDAApiConfig } from './type';
 
@@ -48,6 +49,11 @@ export class oaAPIClass extends baseApiClass {
   public cancelOrder(orderID: string): Promise<oaCancelOrderResponse> {
     const path = this.getPath('orders').concat('/', orderID, '/cancel');
     return this.put(path, {});
+  }
+
+  public getOrders(request: GetOrderRequest): Promise<OrderResponse> {
+    const path = this.getPath('orders');
+    return this.get(path, request)
   }
 
   public getPendingOrders(): Promise<PendingOrderResponse> {

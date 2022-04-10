@@ -21,6 +21,7 @@
     "axios": "^0.21.1",
     "querystring": "^0.2.1",
     "my-utils": "github:sawara7/my-utils",
+    "trade-utils": "github:sawara7/trade-utils",
     "slack-notification": "github:sawara7/slack-notification"
   }
 }

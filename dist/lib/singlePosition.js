@@ -9,142 +9,123 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SinglePosition = void 0;
+exports.OANDASinglePosition = void 0;
 const my_utils_1 = require("my-utils");
-class SinglePosition {
+const trade_utils_1 = require("trade-utils");
+const order_1 = require("./order");
+class OANDASinglePosition extends trade_utils_1.BasePositionClass {
     constructor(params) {
-        // Position State
+        super(params);
         this._initialSize = 0;
+        this._currentSize = 0;
         this._openPrice = 0;
         this._closePrice = 0;
-        this._openSide = 'buy';
         this._openID = '0';
         this._closeID = '0';
-        // Information
-        this._closeCount = 0;
-        this._cumulativeProfit = 0;
-        if (!SinglePosition._lastOrderTime) {
-            SinglePosition._lastOrderTime = {};
+        if (!OANDASinglePosition._lastOrderTime) {
+            OANDASinglePosition._lastOrderTime = {};
         }
-        this._marketName = params.marketName;
-        if (!SinglePosition._lastOrderTime[this._marketName]) {
-            SinglePosition._lastOrderTime[this._marketName] = Date.now();
+        this._marketInfo = params.marketInfo;
+        if (!OANDASinglePosition._lastOrderTime[this._marketInfo.name]) {
+            OANDASinglePosition._lastOrderTime[this._marketInfo.name] = Date.now();
         }
-        this._funds = params.funds;
         this._api = params.api;
         this._minOrderInterval = params.minOrderInterval || 200;
-        this._openOrderSettings = params.openOrderSettings;
-        this._closeOrderSettings = params.closeOrderSettings;
-        this._sizeResolution = params.sizeResolution;
-        this._priceResolution = params.priceResolution;
+        const size = params.funds / params.openPrice;
+        this._openOrder = new order_1.OANDAOrderClass({
+            market: params.marketInfo,
+            type: params.orderType,
+            side: params.openSide,
+            size: size,
+            price: params.openPrice
+        });
+        this._closeOrder = new order_1.OANDAOrderClass({
+            market: params.marketInfo,
+            type: params.orderType,
+            side: params.openSide === 'buy' ? 'sell' : 'buy',
+            size: size,
+            price: params.closePrice
+        });
+        this._initialSize = this._openOrder.size;
     }
-    roundSize(size) {
-        return Math.round(size * (1 / this._sizeResolution)) / (1 / this._sizeResolution);
-    }
-    roundPrice(price) {
-        return Math.round(price * (1 / this._priceResolution)) / (1 / this._priceResolution);
-    }
-    placeOrder(side, size, price) {
+    placeOrder(order) {
         return __awaiter(this, void 0, void 0, function* () {
-            const p = {
-                type: 'LIMIT',
-                instrument: this._marketName,
-                units: this.roundSize(size) * (side === 'buy' ? 1 : -1),
-                positionFill: 'DEFAULT',
-                price: this.roundPrice(price).toString(),
-                triggerCondition: 'DEFAULT'
-            };
-            if (SinglePosition._lastOrderTime && SinglePosition._lastOrderTime[this._marketName]) {
-                const interval = Date.now() - SinglePosition._lastOrderTime[this._marketName];
+            if (OANDASinglePosition._lastOrderTime && OANDASinglePosition._lastOrderTime[this._marketInfo.name]) {
+                const interval = Date.now() - OANDASinglePosition._lastOrderTime[this._marketInfo.name];
                 if (interval > 0) {
                     if (interval < this._minOrderInterval) {
-                        SinglePosition._lastOrderTime[this._marketName] += this._minOrderInterval;
+                        OANDASinglePosition._lastOrderTime[this._marketInfo.name] += this._minOrderInterval;
                         yield (0, my_utils_1.sleep)(this._minOrderInterval - interval);
                     }
                     else if (interval > this._minOrderInterval) {
-                        SinglePosition._lastOrderTime[this._marketName] = Date.now();
+                        OANDASinglePosition._lastOrderTime[this._marketInfo.name] = Date.now();
                     }
                 }
                 else if (interval < 0) {
-                    SinglePosition._lastOrderTime[this._marketName] += this._minOrderInterval;
-                    yield (0, my_utils_1.sleep)(SinglePosition._lastOrderTime[this._marketName] - Date.now());
+                    OANDASinglePosition._lastOrderTime[this._marketInfo.name] += this._minOrderInterval;
+                    yield (0, my_utils_1.sleep)(OANDASinglePosition._lastOrderTime[this._marketInfo.name] - Date.now());
                 }
             }
-            return yield this._api.postOrder(p);
+            return yield this._api.postOrder(order.request);
         });
     }
-    open() {
+    doOpen() {
+        const _super = Object.create(null, {
+            doOpen: { get: () => super.doOpen }
+        });
         return __awaiter(this, void 0, void 0, function* () {
-            if (!this._openOrderSettings || !this._closeOrderSettings) {
-                return { success: false, message: 'No open order settings.' };
-            }
+            yield _super.doOpen.call(this);
             if (parseInt(this._openID) > 0) {
-                return { success: false, message: 'Position is already opened.' };
+                throw new Error('Position is already opened.');
             }
-            const result = {
-                success: false
-            };
-            this._openID = '1'; // lock
-            try {
-                const res = yield this.placeOrder(this._openOrderSettings.side, this._funds / this._openOrderSettings.price, this._openOrderSettings.price);
-                this._openID = res.orderCreateTransaction.id;
-                return { success: true };
-            }
-            catch (e) {
-                result.message = e;
-                this._openID = '0';
-            }
-            return { success: false, message: 'Open Failed.' };
+            const res = yield this.placeOrder(this._openOrder);
+            this._openID = res.orderCreateTransaction.id;
         });
     }
-    close() {
+    doClose() {
+        const _super = Object.create(null, {
+            doClose: { get: () => super.doClose }
+        });
         return __awaiter(this, void 0, void 0, function* () {
-            if (!this._closeOrderSettings || !this._closeOrderSettings) {
-                return { success: false, message: 'No close order settings.' };
-            }
+            yield _super.doClose.call(this);
             if (parseInt(this._closeID) > 0) {
-                return { success: false, message: 'Position is already closed.' };
+                throw new Error('Position is already opened.');
             }
-            const result = {
-                success: false
-            };
-            this._closeID = '1'; // lock
-            try {
-                const res = yield this.placeOrder(this._closeOrderSettings.side, this._funds / this._closeOrderSettings.price, this._closeOrderSettings.price);
-                this._closeID = res.orderCreateTransaction.id;
-                return { success: true };
-            }
-            catch (e) {
-                result.message = e;
-                this._closeID = '0';
-            }
-            return { success: false, message: 'Open Failed.' };
+            const res = yield this.placeOrder(this._closeOrder);
+            this._closeID = res.orderCreateTransaction.id;
         });
     }
     updateOrder(order) {
         if (order.id === this._openID) {
+            const size = Math.abs(parseFloat(order.units));
             if (order.state === 'FILLED') {
-                this._initialSize = this.roundSize(Math.abs(parseFloat(order.units)));
                 this._openID = '0';
-                this._openSide = parseFloat(order.units) > 0 ? "buy" : "sell";
+                this._initialSize = size;
+                this._currentSize = size;
+                this._openPrice = parseFloat(order.price);
                 if (this.onOpened) {
                     this.onOpened(this);
                 }
             }
             if (order.state === 'CANCELLED') {
                 this._openID = '0';
+                this._initialSize = size;
+                this._currentSize = size;
+                this._openPrice = parseFloat(order.price);
                 if (this.onOpenOrderCanceled) {
                     this.onOpenOrderCanceled(this);
                 }
             }
         }
         if (order.id === this._closeID) {
+            const size = Math.abs(parseFloat(order.units));
             if (order.state === 'FILLED') {
-                const size = this.roundSize(Math.abs(parseFloat(order.units)));
                 this._cumulativeProfit +=
-                    this._initialSize * (this._openSide === 'buy' ?
+                    this._initialSize * (this._openOrder.side === 'buy' ?
                         this._closePrice - this._openPrice :
                         this._openPrice - this._closePrice);
+                this._currentSize -= size;
+                this._initialSize = 0;
                 this._closeCount++;
                 this._closeID = '0';
                 if (this.onClosed) {
@@ -152,6 +133,12 @@ class SinglePosition {
                 }
             }
             if (order.state === 'CANCELLED') {
+                this._cumulativeProfit +=
+                    this._initialSize * (this._openOrder.side === 'buy' ?
+                        this._closePrice - this._openPrice :
+                        this._openPrice - this._closePrice);
+                this._currentSize -= size;
+                this._initialSize = 0;
                 this._closeID = '0';
                 if (this.onCloseOrderCanceled) {
                     this.onCloseOrderCanceled(this);
@@ -159,29 +146,21 @@ class SinglePosition {
             }
         }
     }
-    get profit() {
-        return this._cumulativeProfit;
-    }
     get enabledOpen() {
-        return this._openID === '0' && this._closeID === '0';
+        return super.enabledOpen &&
+            this.activeID === '' &&
+            this._currentSize === 0;
     }
-    get openOrderSettings() {
-        return this._openOrderSettings;
-    }
-    get closeOrderSettings() {
-        return this._closeOrderSettings;
-    }
-    get openSide() {
-        return this._openSide;
+    get enabledClose() {
+        return super.enabledOpen &&
+            this.activeID === '' &&
+            this._currentSize > 0;
     }
     get currentOpenPrice() {
         return this._openPrice;
     }
     get currentClosePrice() {
         return this._closePrice;
-    }
-    get closeCount() {
-        return this._closeCount;
     }
     get activeID() {
         if (!['0', '1'].includes(this._openID)) {
@@ -193,4 +172,4 @@ class SinglePosition {
         return '';
     }
 }
-exports.SinglePosition = SinglePosition;
+exports.OANDASinglePosition = OANDASinglePosition;

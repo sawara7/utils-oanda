@@ -1,200 +1,154 @@
 import {
-    OrderSide,
-    OrderType,
     sleep
 } from "my-utils"
 
 import {
+    BasePositionClass,
+    MarketInfo,
+    OrderSide,
+    OrderType
+} from "trade-utils"
+
+import {
     oaAPIClass,
-    LimitOrderRequest,
     oaOrderResponse,
     oaBasicOrder
 } from ".."
+import { OANDAOrderClass } from "./order"
 
-export interface SinglePositionParameters {
-    marketName: string
+export interface OANDASinglePositionParameters {
+    marketInfo: MarketInfo
+    openSide: OrderSide
+    orderType: OrderType
     funds: number
     api: oaAPIClass
-    sizeResolution: number
-    priceResolution: number
+    openPrice: number
+    closePrice: number
     minOrderInterval?: number
-    openOrderSettings?: OrderSettings
-    closeOrderSettings?: OrderSettings
 }
 
-export interface SinglePositionResponse {
-    success: boolean
-    message?: any 
-}
-export interface OrderSettings {
-    side: OrderSide
-    type: OrderType
-    price: number
-    size?: number
-    postOnly?: boolean
-    cancelSec?: number
-}
-export class SinglePosition {
+export class OANDASinglePosition extends BasePositionClass {
     // Global State
     private static _lastOrderTime?: {[marketName: string]: number}
 
     // Parameters
     private _api: oaAPIClass
-    private _marketName: string
-    private _funds: number 
     private _minOrderInterval: number
-    private _openOrderSettings?: OrderSettings
-    private _closeOrderSettings?: OrderSettings
 
     // Position State
+    private _marketInfo: MarketInfo
     private _initialSize: number = 0
+    private _currentSize: number = 0
     private _openPrice: number = 0
     private _closePrice: number = 0
-    private _openSide: OrderSide = 'buy'
+    private _openOrder: OANDAOrderClass
+    private _closeOrder: OANDAOrderClass
 
     private _openID: string = '0'
     private _closeID: string = '0'
-    private _sizeResolution: number
-    private _priceResolution: number
-
-    // Information
-    private _closeCount: number = 0
-    private _cumulativeProfit: number = 0
 
     // Events
-    public onOpened?: (pos: SinglePosition) => void
-    public onClosed?: (pos: SinglePosition) => void
-    public onOpenOrderCanceled?: (pos: SinglePosition) => void
-    public onCloseOrderCanceled?: (pos: SinglePosition) => void
+    public onOpened?: (pos: OANDASinglePosition) => void
+    public onClosed?: (pos: OANDASinglePosition) => void
+    public onOpenOrderCanceled?: (pos: OANDASinglePosition) => void
+    public onCloseOrderCanceled?: (pos: OANDASinglePosition) => void
 
-    constructor(params: SinglePositionParameters){
-        if (!SinglePosition._lastOrderTime){
-            SinglePosition._lastOrderTime = {}
+    constructor(params: OANDASinglePositionParameters){
+        super(params)
+        if (!OANDASinglePosition._lastOrderTime){
+            OANDASinglePosition._lastOrderTime = {}
         }
-        this._marketName = params.marketName
-        if (!SinglePosition._lastOrderTime[this._marketName]){
-            SinglePosition._lastOrderTime[this._marketName] = Date.now()
+        this._marketInfo = params.marketInfo
+        if (!OANDASinglePosition._lastOrderTime[this._marketInfo.name]){
+            OANDASinglePosition._lastOrderTime[this._marketInfo.name] = Date.now()
         }
-        this._funds = params.funds
         this._api = params.api
         this._minOrderInterval = params.minOrderInterval || 200
-        this._openOrderSettings = params.openOrderSettings
-        this._closeOrderSettings = params.closeOrderSettings
-        this._sizeResolution = params.sizeResolution
-        this._priceResolution = params.priceResolution
+        const size = params.funds/params.openPrice
+        this._openOrder = new OANDAOrderClass({
+            market: params.marketInfo,
+            type: params.orderType,
+            side: params.openSide,
+            size: size,
+            price: params.openPrice
+        })
+        this._closeOrder = new OANDAOrderClass({
+            market: params.marketInfo,
+            type: params.orderType,
+            side: params.openSide === 'buy'? 'sell': 'buy',
+            size: size,
+            price: params.closePrice
+        })
+        this._initialSize = this._openOrder.size
     }
 
-    private roundSize(size: number): number {
-        return Math.round(size * (1/this._sizeResolution))/(1/this._sizeResolution)
-    }
-
-    private roundPrice(price: number): number {
-        return Math.round(price * (1/this._priceResolution))/(1/this._priceResolution)
-    }
-
-    private async placeOrder(
-        side: OrderSide,
-        size: number,
-        price: number): Promise<oaOrderResponse> {
-        const p: LimitOrderRequest = {
-            type: 'LIMIT',
-            instrument: this._marketName,
-            units: this.roundSize(size) * (side === 'buy'? 1: -1),
-            positionFill : 'DEFAULT',
-            price: this.roundPrice(price).toString(),
-            triggerCondition: 'DEFAULT'
-        }
-        if (SinglePosition._lastOrderTime && SinglePosition._lastOrderTime[this._marketName]) {
-            const interval = Date.now() - SinglePosition._lastOrderTime[this._marketName]
+    private async placeOrder(order: OANDAOrderClass): Promise<oaOrderResponse> {
+        if (OANDASinglePosition._lastOrderTime && OANDASinglePosition._lastOrderTime[this._marketInfo.name]) {
+            const interval = Date.now() - OANDASinglePosition._lastOrderTime[this._marketInfo.name]
             if (interval > 0) {
                 if (interval < this._minOrderInterval) {
-                    SinglePosition._lastOrderTime[this._marketName] += this._minOrderInterval 
+                    OANDASinglePosition._lastOrderTime[this._marketInfo.name] += this._minOrderInterval 
                     await sleep(this._minOrderInterval - interval)
                 } else if (interval > this._minOrderInterval) {
-                    SinglePosition._lastOrderTime[this._marketName] = Date.now()
+                    OANDASinglePosition._lastOrderTime[this._marketInfo.name] = Date.now()
                 }
             } else if (interval < 0) {
-                SinglePosition._lastOrderTime[this._marketName] += this._minOrderInterval
-                await sleep(SinglePosition._lastOrderTime[this._marketName] - Date.now())
+                OANDASinglePosition._lastOrderTime[this._marketInfo.name] += this._minOrderInterval
+                await sleep(OANDASinglePosition._lastOrderTime[this._marketInfo.name] - Date.now())
             }
         }
-        return await this._api.postOrder(p)
+        return await this._api.postOrder(order.request)
     }
 
-    public async open(): Promise<SinglePositionResponse> {
-        if (!this._openOrderSettings || !this._closeOrderSettings) {
-            return {success: false, message:'No open order settings.'}
-        }
+    public async doOpen(): Promise<void> {
+        await super.doOpen()
         if (parseInt(this._openID) > 0) {
-            return {success: false, message:'Position is already opened.'}
+            throw new Error('Position is already opened.')
         }
-        const result: SinglePositionResponse = {
-            success: false
-        }
-        this._openID = '1' // lock
-        try { 
-            const res = await this.placeOrder(
-                this._openOrderSettings.side,
-                this._funds/this._openOrderSettings.price,
-                this._openOrderSettings.price)
-            this._openID = res.orderCreateTransaction.id
-            return {success: true}
-        } catch(e) {
-            result.message = e
-            this._openID = '0'
-        }
-        return {success: false, message:'Open Failed.'}
+        const res = await this.placeOrder(this._openOrder)
+        this._openID = res.orderCreateTransaction.id
     }
     
-    public async close(): Promise<SinglePositionResponse> {
-        if (!this._closeOrderSettings || !this._closeOrderSettings) {
-            return {success: false, message:'No close order settings.'}
-        }
+    public async doClose(): Promise<void> {
+        await super.doClose()
         if (parseInt(this._closeID) > 0) {
-            return {success: false, message:'Position is already closed.'}
+            throw new Error('Position is already opened.')
         }
-        const result: SinglePositionResponse = {
-            success: false
-        }
-        this._closeID = '1' // lock
-        try { 
-            const res = await this.placeOrder(
-                this._closeOrderSettings.side,
-                this._funds/this._closeOrderSettings.price,
-                this._closeOrderSettings.price)
-            this._closeID = res.orderCreateTransaction.id
-            return {success: true}
-        } catch(e) {
-            result.message = e
-            this._closeID = '0'
-        }
-        return {success: false, message:'Open Failed.'}
+        const res = await this.placeOrder(this._closeOrder)
+        this._closeID = res.orderCreateTransaction.id
     }
 
     public updateOrder(order: oaBasicOrder) {
         if (order.id === this._openID) {
+            const size = Math.abs(parseFloat(order.units))
             if (order.state === 'FILLED') {
-                this._initialSize = this.roundSize(Math.abs(parseFloat(order.units)))
                 this._openID = '0'
-                this._openSide = parseFloat(order.units)>0 ? "buy": "sell"
+                this._initialSize = size
+                this._currentSize = size
+                this._openPrice = parseFloat(order.price)
                 if (this.onOpened){
                     this.onOpened(this)
                 }
             }
             if (order.state === 'CANCELLED') {
                 this._openID = '0'
+                this._initialSize = size
+                this._currentSize = size
+                this._openPrice = parseFloat(order.price)
                 if (this.onOpenOrderCanceled) {
                     this.onOpenOrderCanceled(this)
                 }
             }
         }
         if (order.id === this._closeID) {
+            const size = Math.abs(parseFloat(order.units))
             if (order.state === 'FILLED') {
-                const size = this.roundSize(Math.abs(parseFloat(order.units)))
                 this._cumulativeProfit +=
-                    this._initialSize * (this._openSide === 'buy'?
+                    this._initialSize * (this._openOrder.side === 'buy'?
                     this._closePrice - this._openPrice:
                     this._openPrice - this._closePrice)
+                this._currentSize -= size
+                this._initialSize = 0
                 this._closeCount++
                 this._closeID = '0'
                 if (this.onClosed){
@@ -202,6 +156,12 @@ export class SinglePosition {
                 }
             }
             if (order.state === 'CANCELLED') {
+                this._cumulativeProfit +=
+                    this._initialSize * (this._openOrder.side === 'buy'?
+                    this._closePrice - this._openPrice:
+                    this._openPrice - this._closePrice)
+                this._currentSize -= size
+                this._initialSize = 0
                 this._closeID = '0'
                 if (this.onCloseOrderCanceled) {
                     this.onCloseOrderCanceled(this)
@@ -210,24 +170,16 @@ export class SinglePosition {
         }
     }
 
-    get profit(): number {
-        return this._cumulativeProfit
+    get enabledOpen(): boolean {
+        return super.enabledOpen &&
+            this.activeID === '' &&
+            this._currentSize === 0
     }
 
-    get enabledOpen(): Boolean {
-        return this._openID === '0' && this._closeID === '0'
-    }
-
-    get openOrderSettings(): OrderSettings | undefined {
-        return this._openOrderSettings
-    }
-
-    get closeOrderSettings(): OrderSettings | undefined {
-        return this._closeOrderSettings
-    }
-
-    get openSide(): OrderSide {
-        return this._openSide
+    get enabledClose(): boolean {
+        return super.enabledOpen &&
+            this.activeID === '' &&
+            this._currentSize > 0
     }
 
     get currentOpenPrice(): number {
@@ -236,10 +188,6 @@ export class SinglePosition {
 
     get currentClosePrice(): number {
         return this._closePrice
-    }
-
-    get closeCount(): number {
-        return this._closeCount
     }
 
     get activeID(): string {

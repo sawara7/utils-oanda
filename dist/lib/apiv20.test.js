@@ -14,17 +14,17 @@ const __1 = require("..");
     const pair = 'USD_JPY';
     const api = yield (0, __1.getOandaAPI)("Primary");
     try {
-        // const res1 = await api.getPricing({instruments: pair});
-        // console.log(res1);
-        // const res2 = await api.getOpenTrade();
+        const res1 = yield api.getPricing({ instruments: pair });
+        console.log(res1);
+        // const res2 = await api.getPendingOrders();
         // console.log(res2);
-        const res = yield api.getOrders({
-            ids: "406314",
-            state: "FILLED"
-        });
-        console.log(res);
+        // const res = await api.getOrders({
+        //     ids: "406314",
+        //     state: "FILLED"
+        // })
+        // console.log(res)
         // const ids: string[] = []
-        // for (const o of res.orders){
+        // for (const o of res2.orders){
         //     api.cancelOrder(o.id)
         // }
         // const req: LimitOrderRequest = {

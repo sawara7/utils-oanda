@@ -20,16 +20,10 @@ class OANDASinglePosition extends trade_utils_1.BasePositionClass {
         this._currentSize = 0;
         this._openPrice = 0;
         this._closePrice = 0;
-        this._openID = '0';
-        this._closeID = '0';
-        if (!OANDASinglePosition._lastOrderTime) {
-            OANDASinglePosition._lastOrderTime = {};
-        }
-        this._marketInfo = params.marketInfo;
-        if (!OANDASinglePosition._lastOrderTime[this._marketInfo.name]) {
-            OANDASinglePosition._lastOrderTime[this._marketInfo.name] = Date.now();
-        }
+        this._openID = '';
+        this._closeID = '';
         this._api = params.api;
+        this._marketInfo = params.marketInfo;
         this._minOrderInterval = params.minOrderInterval || 200;
         const size = params.funds / params.openPrice;
         this._openOrder = new order_1.OANDAOrderClass({
@@ -47,10 +41,22 @@ class OANDASinglePosition extends trade_utils_1.BasePositionClass {
             price: params.closePrice
         });
         this._initialSize = this._openOrder.size;
+        OANDASinglePosition.initializeLastOrderTime(this._marketInfo.name);
     }
-    placeOrder(order) {
+    static initializeLastOrderTime(market) {
+        if (!OANDASinglePosition._lastOrderTime) {
+            OANDASinglePosition._lastOrderTime = {};
+        }
+        if (!OANDASinglePosition._lastOrderTime[market]) {
+            OANDASinglePosition._lastOrderTime[market] = Date.now();
+        }
+    }
+    sleepWhileOrderInterval() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (OANDASinglePosition._lastOrderTime && OANDASinglePosition._lastOrderTime[this._marketInfo.name]) {
+            if (!OANDASinglePosition._lastOrderTime) {
+                throw new Error('no last order');
+            }
+            if (OANDASinglePosition._lastOrderTime[this._marketInfo.name]) {
                 const interval = Date.now() - OANDASinglePosition._lastOrderTime[this._marketInfo.name];
                 if (interval > 0) {
                     if (interval < this._minOrderInterval) {
@@ -66,6 +72,11 @@ class OANDASinglePosition extends trade_utils_1.BasePositionClass {
                     yield (0, my_utils_1.sleep)(OANDASinglePosition._lastOrderTime[this._marketInfo.name] - Date.now());
                 }
             }
+        });
+    }
+    placeOrder(order) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.sleepWhileOrderInterval();
             return yield this._api.postOrder(order.request);
         });
     }
@@ -96,55 +107,51 @@ class OANDASinglePosition extends trade_utils_1.BasePositionClass {
         });
     }
     updateOrder(order) {
+        const size = Math.abs(parseInt(order.units));
         if (order.id === this._openID) {
-            const size = Math.abs(parseFloat(order.units));
-            if (order.state === 'FILLED') {
-                this._openID = '0';
+            if (['FILLED', 'CANCELLED'].includes(order.state)) {
+                this._openID = '';
                 this._initialSize = size;
                 this._currentSize = size;
                 this._openPrice = parseFloat(order.price);
-                if (this.onOpened) {
-                    this.onOpened(this);
-                }
             }
-            if (order.state === 'CANCELLED') {
-                this._openID = '0';
-                this._initialSize = size;
-                this._currentSize = size;
-                this._openPrice = parseFloat(order.price);
-                if (this.onOpenOrderCanceled) {
-                    this.onOpenOrderCanceled(this);
-                }
+            if (order.state === 'FILLED' && this.onOpened) {
+                this.onOpened(this);
+            }
+            if (order.state === 'CANCELLED' && this.onOpenOrderCanceled) {
+                this.onOpenOrderCanceled(this);
             }
         }
         if (order.id === this._closeID) {
-            const size = Math.abs(parseFloat(order.units));
-            if (order.state === 'FILLED') {
-                this._cumulativeProfit +=
-                    this._initialSize * (this._openOrder.side === 'buy' ?
-                        this._closePrice - this._openPrice :
-                        this._openPrice - this._closePrice);
+            if (['FILLED', 'CANCELLED'].includes(order.state)) {
+                this._closeID = '';
+                this._closePrice = parseFloat(order.price);
                 this._currentSize -= size;
-                this._initialSize = 0;
-                this._closeCount++;
-                this._closeID = '0';
-                if (this.onClosed) {
-                    this.onClosed(this);
+                if (this._currentSize === 0) {
+                    this._cumulativeProfit +=
+                        this._initialSize * (this._openOrder.side === 'buy' ?
+                            this._closePrice - this._openPrice :
+                            this._openPrice - this._closePrice);
+                    this._initialSize = 0;
+                    this._closeCount++;
                 }
             }
-            if (order.state === 'CANCELLED') {
-                this._cumulativeProfit +=
-                    this._initialSize * (this._openOrder.side === 'buy' ?
-                        this._closePrice - this._openPrice :
-                        this._openPrice - this._closePrice);
-                this._currentSize -= size;
-                this._initialSize = 0;
-                this._closeID = '0';
-                if (this.onCloseOrderCanceled) {
-                    this.onCloseOrderCanceled(this);
-                }
+            if (order.state === 'FILLED' && this.onClosed) {
+                this.onClosed(this);
+            }
+            if (order.state === 'CANCELLED' && this.onCloseOrderCanceled) {
+                this.onCloseOrderCanceled(this);
             }
         }
+    }
+    get activeID() {
+        if (this._openID !== '') {
+            return this._openID;
+        }
+        if (this._closeID !== '') {
+            return this._closeID;
+        }
+        return '';
     }
     get enabledOpen() {
         return super.enabledOpen &&
@@ -156,20 +163,17 @@ class OANDASinglePosition extends trade_utils_1.BasePositionClass {
             this.activeID === '' &&
             this._currentSize > 0;
     }
+    get openOrder() {
+        return this._openOrder;
+    }
+    get closeOrder() {
+        return this._closeOrder;
+    }
     get currentOpenPrice() {
         return this._openPrice;
     }
     get currentClosePrice() {
         return this._closePrice;
-    }
-    get activeID() {
-        if (!['0', '1'].includes(this._openID)) {
-            return this._openID;
-        }
-        if (!['0', '1'].includes(this._closeID)) {
-            return this._closeID;
-        }
-        return '';
     }
 }
 exports.OANDASinglePosition = OANDASinglePosition;

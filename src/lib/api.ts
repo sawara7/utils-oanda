@@ -1,117 +1,142 @@
-import * as http from 'http';
-import * as https from 'https';
-import axios, { AxiosError, AxiosRequestConfig, Method } from 'axios';
+import * as querystring from 'querystring';
+import { baseApiClass, ApiOptions } from './base';
+import {
+  PricingResponse,
+  oaOrderResponse,
+  InstrumentsResponse,
+  GetTradeResponse,
+  GetTransactionsSinceIDResponse,
+  PendingOrderResponse,
+  oaCancelOrderResponse,
+  OrderResponse
+} from './responseType';
+import {
+  GetPricingRequest,
+  AcceptDateTimeFormat,
+  GetTradeRequest,
+  GetTransactionsSinceIDRequest,
+  BaseOrderRequest,
+  GetOrderRequest
+} from './requestType';
+import { OANDAApiConfig } from './type';
 
-export interface ApiConfig {
-  endPoint?: string;
-  keepAlive?: boolean;
-  timeout?: number;
-}
+const URL_API_OANDA = 'https://api-fxtrade.oanda.com';
+const URL_STREAM_OANDA = 'https://stream-fxtrade.oanda.com';
 
-export interface ApiOptions {
-  optionsCallback?: Function;
-  responseCallback?: Function;
-}
+export class oaAPIClass extends baseApiClass {
+  private readonly apiToken: string;
+  private readonly accountID: string;
+  private readonly dateFormat: AcceptDateTimeFormat;
 
-export class ApiError extends Error {
-  code: number = 0;
-  message: string = '';
-  data: any;
-  constructor(code: number, message: string, data?: any){
-    super('API_ERROR');
-    this.code = code;
-    this.message = message;
-    this.data = data;
+  constructor(config: OANDAApiConfig, options?: ApiOptions) {
+    config.endPoint = config.endPoint || URL_API_OANDA;
+    super(config, options);
+    this.apiToken = config.apiToken;
+    this.accountID = config.accountID;
+    this.dateFormat = 'UNIX';
   }
-}
 
-export class baseApiClass {
-  readonly endPoint: string;
-  readonly keepAlive: boolean;
-  readonly timeout: number;
-  readonly optionsCallback?: Function;
-  readonly responseCallback?: Function;
+  private getPath(endPoint: string): string{
+    return '/v3/accounts/'.concat(this.accountID, '/', endPoint);
+  }
 
-  constructor(config: ApiConfig, options?: ApiOptions) {
-    this.endPoint = config.endPoint || "";
-    this.keepAlive = config.keepAlive || false;
-    this.timeout = config.timeout || 3000;
-    if (options) {
-      this.optionsCallback = options.optionsCallback;
-      this.responseCallback = options.responseCallback;
+  //=================
+  // ORDER 
+  //=================
+  public postOrder(request: BaseOrderRequest): Promise<oaOrderResponse> {
+    const path = this.getPath('orders');
+    return this.post(path, {order: request});
+  }
+
+  public cancelOrder(orderID: string): Promise<oaCancelOrderResponse> {
+    const path = this.getPath('orders').concat('/', orderID, '/cancel');
+    return this.put(path, {});
+  }
+
+  public getOrders(request: GetOrderRequest): Promise<OrderResponse> {
+    const path = this.getPath('orders');
+    return this.get(path, request)
+  }
+
+  public getPendingOrders(): Promise<PendingOrderResponse> {
+    const path = this.getPath('pendingOrders');
+    return this.get(path, {})
+  }
+
+  //=================
+  // TRANSACTIONS
+  //=================
+  // public getTransaction(request: GetTransactionsRequest): Promise<Transaction> {
+  //   const path = this.getPath('transactions');
+  //   return this.get(path, request);
+  // }
+
+  public getTransactionsSinceID(request: GetTransactionsSinceIDRequest): Promise<GetTransactionsSinceIDResponse> {
+    const path = this.getPath('transactions/sinceid');
+    return this.get(path, request);
+  }
+
+  // public getTransactionsStream(): Promise<any> {
+  //   const path = this.getPath('transactions/stream');
+  //   return this.get(path);
+  // }
+
+  //=================
+  // TRADES
+  //=================
+  public getTrade(request: GetTradeRequest): Promise<GetTradeResponse> {
+    const path = this.getPath('trades');
+    return this.get(path, request);
+  }
+
+  public getOpenTrade(): Promise<GetTradeResponse> {
+    const path = this.getPath('openTrades');
+    return this.get(path, {});
+  }
+
+  //=================
+  // PRICING
+  //=================
+  public getPricing(params: GetPricingRequest): Promise<PricingResponse> {
+    const path = this.getPath('pricing');
+    return this.get(path, params);
+  }
+
+  //=================
+  // INSTRUMENTS
+  //=================
+  public getInstruments(): Promise<InstrumentsResponse> {
+    const path = this.getPath('instruments');
+    return this.get(path, {});
+  }
+
+  //=================
+  // METHODS
+  //=================
+  get<T>(path: string, query?: {}) {
+    let params = '';
+    if (query && Object.keys(query).length) {
+      params += '?' + querystring.stringify(query);
     }
+    const headers = this.makeHeader();
+    return super.get(path, query, headers);
   }
 
-  async get(path: string, params?: {}, headers?: {}) {
-    return this.request('GET', path, params, undefined, headers);
+  post<T>(path: string, query: {}) {
+    const headers = this.makeHeader();
+    return super.post(path, query, headers);
   }
 
-  async post(path: string, data?: {}, headers?: {}) {
-    return this.request('POST', path, undefined, data, headers);
+  put<T>(path: string, query: {}) {
+    const headers = this.makeHeader();
+    return super.put(path, query, headers);
   }
 
-  async put(path: string, data?: {}, headers?: {}) {
-    return this.request('PUT', path, undefined, data, headers);
-  }
-
-  async request(method: Method, path: string, params?: {}, data?: {}, headers?: {}) {
-    const options: AxiosRequestConfig = {
-      method: method,
-      baseURL: this.endPoint,
-      url: path,
-      timeout: this.timeout,
-      httpAgent: new http.Agent({ keepAlive: this.keepAlive }),
-      httpsAgent: new https.Agent({ keepAlive: this.keepAlive }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+  private makeHeader(): any {
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.apiToken,
+      'Accept-Datetime-Format': this.dateFormat
     };
-
-    if (params && Object.keys(params).length > 0) {
-      Object.assign(options, { params });
-    }
-    if (data && Object.keys(data).length >= 0) {
-      Object.assign(options, { data });
-    }
-    if (headers && Object.keys(headers).length > 0) {
-      Object.assign(options, { headers });
-    }
-
-    if (this.optionsCallback) {
-      await this.optionsCallback(options);
-    }
-
-    try {
-      const res = await axios.request(options);
-      if (this.responseCallback) {
-        this.responseCallback(res.data);
-      }
-      return res.data;
-    }catch(e){
-      const err = e as AxiosError;
-      let code = 0;
-      let message = err.message;
-      let data;
-      if (err.response) {
-        code = err.response.status;
-        data = err.response.data;
-      }
-      throw new ApiError(code, message, data);
-    }
-    // return axios.request(options).then((res) => {
-    //   if (this.responseCallback) {
-    //     this.responseCallback(res.data);
-    //   }
-    //   return res.data;
-    // }).catch((e: AxiosError) => {
-    //   let code = 0;
-    //   let message = e.message;
-    //   let data;
-    //   if (e.response) {
-    //     code = e.response.status;
-    //     data = e.response.data;
-    //   }
-    //   throw new ApiError(code, message, data);
-    // });
   }
 }

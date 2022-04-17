@@ -1,5 +1,6 @@
 import { BasePositionClass, MarketInfo, OrderSide, OrderType } from "trade-utils";
 import { oaAPIClass, oaBasicOrder } from "..";
+import { OANDAOrderClass } from "./order";
 export interface OANDASinglePositionParameters {
     marketInfo: MarketInfo;
     openSide: OrderSide;
@@ -28,13 +29,17 @@ export declare class OANDASinglePosition extends BasePositionClass {
     onOpenOrderCanceled?: (pos: OANDASinglePosition) => void;
     onCloseOrderCanceled?: (pos: OANDASinglePosition) => void;
     constructor(params: OANDASinglePositionParameters);
+    private static initializeLastOrderTime;
+    private sleepWhileOrderInterval;
     private placeOrder;
     doOpen(): Promise<void>;
     doClose(): Promise<void>;
     updateOrder(order: oaBasicOrder): void;
+    get activeID(): string;
     get enabledOpen(): boolean;
     get enabledClose(): boolean;
+    get openOrder(): OANDAOrderClass;
+    get closeOrder(): OANDAOrderClass;
     get currentOpenPrice(): number;
     get currentClosePrice(): number;
-    get activeID(): string;
 }

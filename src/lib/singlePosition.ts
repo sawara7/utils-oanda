@@ -47,12 +47,6 @@ export class OANDASinglePosition extends BasePositionClass {
     private _openID: string = ''
     private _closeID: string = ''
 
-    // Events
-    public onOpened?: (pos: OANDASinglePosition) => void
-    public onClosed?: (pos: OANDASinglePosition) => void
-    public onOpenOrderCanceled?: (pos: OANDASinglePosition) => void
-    public onCloseOrderCanceled?: (pos: OANDASinglePosition) => void
-
     constructor(params: OANDASinglePositionParameters){
         super(params)
         this._api = params.api

@@ -24,10 +24,6 @@ export declare class OANDASinglePosition extends BasePositionClass {
     private _closeOrder;
     private _openID;
     private _closeID;
-    onOpened?: (pos: OANDASinglePosition) => void;
-    onClosed?: (pos: OANDASinglePosition) => void;
-    onOpenOrderCanceled?: (pos: OANDASinglePosition) => void;
-    onCloseOrderCanceled?: (pos: OANDASinglePosition) => void;
     constructor(params: OANDASinglePositionParameters);
     private static initializeLastOrderTime;
     private sleepWhileOrderInterval;

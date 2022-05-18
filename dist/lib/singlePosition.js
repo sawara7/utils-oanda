@@ -43,6 +43,9 @@ class OANDASinglePosition extends trade_utils_1.BasePositionClass {
         this._initialSize = this._openOrder.size;
         OANDASinglePosition.initializeLastOrderTime(this._marketInfo.name);
     }
+    doLosscut() {
+        throw new Error("Method not implemented.");
+    }
     static initializeLastOrderTime(market) {
         if (!OANDASinglePosition._lastOrderTime) {
             OANDASinglePosition._lastOrderTime = {};
@@ -81,11 +84,7 @@ class OANDASinglePosition extends trade_utils_1.BasePositionClass {
         });
     }
     doOpen() {
-        const _super = Object.create(null, {
-            doOpen: { get: () => super.doOpen }
-        });
         return __awaiter(this, void 0, void 0, function* () {
-            yield _super.doOpen.call(this);
             if (parseInt(this._openID) > 0) {
                 throw new Error('Position is already opened.');
             }
@@ -94,11 +93,7 @@ class OANDASinglePosition extends trade_utils_1.BasePositionClass {
         });
     }
     doClose() {
-        const _super = Object.create(null, {
-            doClose: { get: () => super.doClose }
-        });
         return __awaiter(this, void 0, void 0, function* () {
-            yield _super.doClose.call(this);
             if (parseInt(this._closeID) > 0) {
                 throw new Error('Position is already opened.');
             }

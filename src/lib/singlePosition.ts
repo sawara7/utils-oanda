@@ -4,6 +4,7 @@ import {
 
 import {
     BasePositionClass,
+    BasePositionParameters,
     MarketInfo,
     OrderSide,
     OrderType
@@ -16,7 +17,7 @@ import {
 } from ".."
 import { OANDAOrderClass } from "./order"
 
-export interface OANDASinglePositionParameters {
+export interface OANDASinglePositionParameters extends BasePositionParameters {
     marketInfo: MarketInfo
     openSide: OrderSide
     orderType: OrderType
@@ -28,6 +29,9 @@ export interface OANDASinglePositionParameters {
 }
 
 export class OANDASinglePosition extends BasePositionClass {
+    doLosscut(): Promise<void> {
+        throw new Error("Method not implemented.")
+    }
     // Global State
     private static _lastOrderTime?: {[marketName: string]: number}
 
@@ -106,7 +110,6 @@ export class OANDASinglePosition extends BasePositionClass {
     }
 
     public async doOpen(): Promise<void> {
-        await super.doOpen()
         if (parseInt(this._openID) > 0) {
             throw new Error('Position is already opened.')
         }
@@ -115,7 +118,6 @@ export class OANDASinglePosition extends BasePositionClass {
     }
     
     public async doClose(): Promise<void> {
-        await super.doClose()
         if (parseInt(this._closeID) > 0) {
             throw new Error('Position is already opened.')
         }

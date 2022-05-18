@@ -1,7 +1,7 @@
-import { BasePositionClass, MarketInfo, OrderSide, OrderType } from "trade-utils";
+import { BasePositionClass, BasePositionParameters, MarketInfo, OrderSide, OrderType } from "trade-utils";
 import { oaAPIClass, oaBasicOrder } from "..";
 import { OANDAOrderClass } from "./order";
-export interface OANDASinglePositionParameters {
+export interface OANDASinglePositionParameters extends BasePositionParameters {
     marketInfo: MarketInfo;
     openSide: OrderSide;
     orderType: OrderType;
@@ -12,6 +12,7 @@ export interface OANDASinglePositionParameters {
     minOrderInterval?: number;
 }
 export declare class OANDASinglePosition extends BasePositionClass {
+    doLosscut(): Promise<void>;
     private static _lastOrderTime?;
     private _api;
     private _minOrderInterval;

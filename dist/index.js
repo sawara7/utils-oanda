@@ -18,4 +18,5 @@ __exportStar(require("./lib/api"), exports);
 __exportStar(require("./lib/requestType"), exports);
 __exportStar(require("./lib/responseType"), exports);
 __exportStar(require("./lib/type"), exports);
+__exportStar(require("./lib/order"), exports);
 __exportStar(require("./lib/position"), exports);

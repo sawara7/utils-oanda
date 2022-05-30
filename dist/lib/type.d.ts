@@ -6,6 +6,7 @@ export interface ApiConfig {
 export interface OANDAApiConfig extends ApiConfig {
     apiToken: string;
     accountID: string;
+    minOrderInterval?: number;
 }
 export declare const oandaOrderTypes: readonly ["MARKET", "LIMIT", "STOP", "MARKET_IF_TOUCHED", "TAKE_PROFIT", "STOP_LOSS", "GUARANTEED_STOP_LOSS", "TRAILING_STOP_LOSS", "FIXED_PRICE"];
 export declare type oandaOrderType = typeof oandaOrderTypes[number];

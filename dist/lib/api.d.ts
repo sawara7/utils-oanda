@@ -6,6 +6,8 @@ export declare class oaAPIClass extends baseApiClass {
     private readonly apiToken;
     private readonly accountID;
     private readonly dateFormat;
+    private static _lastOrderTime?;
+    private _minOrderInterval;
     constructor(config: OANDAApiConfig, options?: ApiOptions);
     private getPath;
     postOrder(request: BaseOrderRequest): Promise<oaOrderResponse>;
@@ -21,4 +23,5 @@ export declare class oaAPIClass extends baseApiClass {
     post<T>(path: string, query: {}): Promise<any>;
     put<T>(path: string, query: {}): Promise<any>;
     private makeHeader;
+    private sleepWhileOrderInterval;
 }

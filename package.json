@@ -19,8 +19,8 @@
   "bundleDependencies": false,
   "dependencies": {
     "axios": "^0.21.1",
-    "querystring": "^0.2.1",
     "my-utils": "github:sawara7/my-utils",
+    "querystring": "^0.2.1",
     "trade-utils": "github:sawara7/trade-utils"
   }
 }

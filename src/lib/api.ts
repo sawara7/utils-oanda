@@ -19,6 +19,7 @@ import {
   GetOrderRequest
 } from './requestType';
 import { OANDAApiConfig } from './type';
+import { sleep } from 'my-utils';
 
 const URL_API_OANDA = 'https://api-fxtrade.oanda.com';
 const URL_STREAM_OANDA = 'https://stream-fxtrade.oanda.com';
@@ -28,12 +29,16 @@ export class oaAPIClass extends baseApiClass {
   private readonly accountID: string;
   private readonly dateFormat: AcceptDateTimeFormat;
 
+  private static _lastOrderTime?: {[marketName: string]: number}
+  private _minOrderInterval: number
+
   constructor(config: OANDAApiConfig, options?: ApiOptions) {
     config.endPoint = config.endPoint || URL_API_OANDA;
     super(config, options);
     this.apiToken = config.apiToken;
     this.accountID = config.accountID;
     this.dateFormat = 'UNIX';
+    this._minOrderInterval = config.minOrderInterval || 200
   }
 
   private getPath(endPoint: string): string{
@@ -43,8 +48,9 @@ export class oaAPIClass extends baseApiClass {
   //=================
   // ORDER 
   //=================
-  public postOrder(request: BaseOrderRequest): Promise<oaOrderResponse> {
+  public async postOrder(request: BaseOrderRequest): Promise<oaOrderResponse> {
     const path = this.getPath('orders');
+    await this.sleepWhileOrderInterval(request.instrument)
     return this.post(path, {order: request});
   }
 
@@ -138,5 +144,27 @@ export class oaAPIClass extends baseApiClass {
       'Authorization': 'Bearer ' + this.apiToken,
       'Accept-Datetime-Format': this.dateFormat
     };
+  }
+
+  private async sleepWhileOrderInterval(market: string): Promise<void> {
+    if (!oaAPIClass._lastOrderTime) {
+        throw new Error('no last order')
+    }
+    if (oaAPIClass._lastOrderTime[market]) {
+        const interval = Date.now() - oaAPIClass._lastOrderTime[market]
+        if (interval > 0) {
+            if (interval < this._minOrderInterval) {
+              oaAPIClass._lastOrderTime[market] += this._minOrderInterval 
+                await sleep(this._minOrderInterval - interval)
+            } else if (interval > this._minOrderInterval) {
+              oaAPIClass._lastOrderTime[market] = Date.now()
+            }
+        } else if (interval < 0) {
+          oaAPIClass._lastOrderTime[market] += this._minOrderInterval
+            await sleep(oaAPIClass._lastOrderTime[market] - Date.now())
+        }
+    } else {
+      oaAPIClass._lastOrderTime[market] = Date.now()
+    }
   }
 }

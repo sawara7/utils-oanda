@@ -22,10 +22,20 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.oaAPIClass = void 0;
 const querystring = __importStar(require("querystring"));
 const base_1 = require("./base");
+const my_utils_1 = require("my-utils");
 const URL_API_OANDA = 'https://api-fxtrade.oanda.com';
 const URL_STREAM_OANDA = 'https://stream-fxtrade.oanda.com';
 class oaAPIClass extends base_1.baseApiClass {
@@ -35,6 +45,7 @@ class oaAPIClass extends base_1.baseApiClass {
         this.apiToken = config.apiToken;
         this.accountID = config.accountID;
         this.dateFormat = 'UNIX';
+        this._minOrderInterval = config.minOrderInterval || 200;
     }
     getPath(endPoint) {
         return '/v3/accounts/'.concat(this.accountID, '/', endPoint);
@@ -43,8 +54,11 @@ class oaAPIClass extends base_1.baseApiClass {
     // ORDER 
     //=================
     postOrder(request) {
-        const path = this.getPath('orders');
-        return this.post(path, { order: request });
+        return __awaiter(this, void 0, void 0, function* () {
+            const path = this.getPath('orders');
+            yield this.sleepWhileOrderInterval(request.instrument);
+            return this.post(path, { order: request });
+        });
     }
     cancelOrder(orderID) {
         const path = this.getPath('orders').concat('/', orderID, '/cancel');
@@ -123,6 +137,32 @@ class oaAPIClass extends base_1.baseApiClass {
             'Authorization': 'Bearer ' + this.apiToken,
             'Accept-Datetime-Format': this.dateFormat
         };
+    }
+    sleepWhileOrderInterval(market) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!oaAPIClass._lastOrderTime) {
+                throw new Error('no last order');
+            }
+            if (oaAPIClass._lastOrderTime[market]) {
+                const interval = Date.now() - oaAPIClass._lastOrderTime[market];
+                if (interval > 0) {
+                    if (interval < this._minOrderInterval) {
+                        oaAPIClass._lastOrderTime[market] += this._minOrderInterval;
+                        yield (0, my_utils_1.sleep)(this._minOrderInterval - interval);
+                    }
+                    else if (interval > this._minOrderInterval) {
+                        oaAPIClass._lastOrderTime[market] = Date.now();
+                    }
+                }
+                else if (interval < 0) {
+                    oaAPIClass._lastOrderTime[market] += this._minOrderInterval;
+                    yield (0, my_utils_1.sleep)(oaAPIClass._lastOrderTime[market] - Date.now());
+                }
+            }
+            else {
+                oaAPIClass._lastOrderTime[market] = Date.now();
+            }
+        });
     }
 }
 exports.oaAPIClass = oaAPIClass;

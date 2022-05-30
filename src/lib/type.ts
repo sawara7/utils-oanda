@@ -7,6 +7,7 @@ export interface ApiConfig {
 export interface OANDAApiConfig extends ApiConfig {
   apiToken: string;
   accountID: string;
+  minOrderInterval?: number;
 }
 
 export const oandaOrderTypes = [

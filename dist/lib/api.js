@@ -46,6 +46,9 @@ class oaAPIClass extends base_1.baseApiClass {
         this.accountID = config.accountID;
         this.dateFormat = 'UNIX';
         this._minOrderInterval = config.minOrderInterval || 200;
+        if (!oaAPIClass._lastOrderTime) {
+            oaAPIClass._lastOrderTime = {};
+        }
     }
     getPath(endPoint) {
         return '/v3/accounts/'.concat(this.accountID, '/', endPoint);

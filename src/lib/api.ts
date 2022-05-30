@@ -39,6 +39,9 @@ export class oaAPIClass extends baseApiClass {
     this.accountID = config.accountID;
     this.dateFormat = 'UNIX';
     this._minOrderInterval = config.minOrderInterval || 200
+    if (!oaAPIClass._lastOrderTime){
+      oaAPIClass._lastOrderTime = {}
+    }
   }
 
   private getPath(endPoint: string): string{

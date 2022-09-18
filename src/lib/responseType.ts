@@ -287,7 +287,7 @@ export interface Position {
 }
 
 export interface SingleInstrumentPositionResponse {
-  position: Position[];
+  position: Position;
   lastTransactionID: string;
 }
 

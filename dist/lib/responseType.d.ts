@@ -160,7 +160,7 @@ export interface Position {
     short: PositionSide;
 }
 export interface SingleInstrumentPositionResponse {
-    position: Position[];
+    position: Position;
     lastTransactionID: string;
 }
 export interface AccountSummary {

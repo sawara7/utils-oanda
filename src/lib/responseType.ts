@@ -101,7 +101,7 @@ export interface OrderFillTransaction extends Transaction{
   // tradeOpened : (TradeOpen),
   // tradesClosed : (Array[TradeReduce]),
   // tradeReduced : (TradeReduce),
-  // halfSpreadCost : (AccountUnits)
+  // halfSpreadCost : string
 }
 
 export interface OrderCancelTransaction extends Transaction {
@@ -289,4 +289,45 @@ export interface Position {
 export interface SingleInstrumentPositionResponse {
   position: Position[];
   lastTransactionID: string;
+}
+
+export interface AccountSummary {
+  id : string; // # The Account’s identifier
+  alias : string; // # Client-assigned alias for the Account. Only provided if the Account has # an alias set
+  currency : string; //# The home currency of the Account
+  createdByUserID : number; // # ID of the user that created the Account.
+  createdTime : string; // # The date/time when the Account was created.
+  // guaranteedStopLossOrderParameters : (GuaranteedStopLossOrderParameters);   // # The current guaranteed Stop Loss Order settings of the Account. This // # field will only be present if the guaranteedStopLossOrderMode is not // # ‘DISABLED’.
+  // guaranteedStopLossOrderMode : (GuaranteedStopLossOrderMode); // # The current guaranteed Stop Loss Order mode of the Account.
+  // guaranteedStopLossOrderMutability : (GuaranteedStopLossOrderMutability, deprecated); // # The current guaranteed Stop Loss Order mutability setting of the Account. # This field will only be present if the guaranteedStopLossOrderMode is not # ‘DISABLED’. # Deprecated: Will be removed in a future API update.
+  resettablePLTime : string; // # The date/time that the Account’s resettablePL was last reset. # Client-provided margin rate override for the Account. The effective # margin rate of the Account is the lesser of this value and the OANDA # margin rate for the Account’s division. This value is only provided if a # margin rate override exists for the Account.
+  marginRate : number;
+  openTradeCount : number; // # The number of Trades currently open in the Account.
+  openPositionCount : number; // # The number of Positions currently open in the Account.
+  pendingOrderCount : number; // # The number of Orders currently pending in the Account.
+  hedgingEnabled : number; // # Flag indicating that the Account has hedging enabled.
+  unrealizedPL : string; // # The total unrealized profit/loss for all Trades currently open in the # Account.
+  NAV : string; // # The net asset value of the Account. Equal to Account balance + # unrealizedPL.
+  marginUsed : string; // # Margin currently used for the Account.
+  marginAvailable : string; // # Margin available for Account currency.
+  positionValue : string; // # The value of the Account’s open positions represented in the Account’s # home currency.
+  marginCloseoutUnrealizedPL : string; // # The Account’s margin closeout unrealized PL.
+  marginCloseoutNAV : string; // # The Account’s margin closeout NAV.
+  marginCloseoutMarginUsed : string; // # The Account’s margin closeout margin used.
+  marginCloseoutPercent : number; // # The Account’s margin closeout percentage. When this value is 1.0 or above # the Account is in a margin closeout situation.
+  marginCloseoutPositionValue : number; // # The value of the Account’s open positions as used for margin closeout # calculations represented in the Account’s home currency.
+  withdrawalLimit : string; // # The current WithdrawalLimit for the account which will be zero or a positive value indicating how much can be withdrawn from the account.
+  marginCallMarginUsed : string; // # The Account’s margin call margin used.
+  marginCallPercent : number; // # The Account’s margin call percentage. When this value is 1.0 or above the # Account is in a margin call situation.
+  balance : string; // # The current balance of the account.
+  pl : string; // # The total profit/loss realized over the lifetime of the Account.
+  resettablePL : string; // # The total realized profit/loss for the account since it was last reset by # the client.
+  financing : string; // # The total amount of financing paid/collected over the lifetime of the # account.
+  commission : string; //# The total amount of commission paid over the lifetime of the Account.
+  dividendAdjustment : string; // # The total amount of dividend adjustment paid over the lifetime of the # Account in the Account’s home currency.
+  guaranteedExecutionFees : string; // # The total amount of fees charged over the lifetime of the Account for the # execution of guaranteed Stop Loss Orders.
+  marginCallEnterTime : number; // # The date/time when the Account entered a margin call state. Only provided // # if the Account is in a margin call.
+  marginCallExtensionCount : number; //# The number of times that the Account’s current margin call was extended.
+  lastMarginCallExtensionTime : number; // # The date/time of the Account’s last margin call extension.
+  lastTransactionID : number; // # The ID of the last Transaction created for the Account.
 }

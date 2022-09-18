@@ -123,6 +123,13 @@ class oaAPIClass extends base_1.baseApiClass {
         return this.get(path, {});
     }
     //=================
+    // Get the details of a single instruments position in an Account.
+    //=================
+    getAccountSummary() {
+        const path = this.getPath('summary');
+        return this.get(path, {});
+    }
+    //=================
     // METHODS
     //=================
     get(path, query) {

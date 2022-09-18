@@ -9,7 +9,8 @@ import {
   PendingOrderResponse,
   oaCancelOrderResponse,
   OrderResponse,
-  SingleInstrumentPositionResponse
+  SingleInstrumentPositionResponse,
+  AccountSummary
 } from './responseType';
 import {
   GetPricingRequest,
@@ -125,6 +126,14 @@ export class oaAPIClass extends baseApiClass {
   //=================
   public getSingleInstrumentPosition(instrument: oandaPair): Promise<SingleInstrumentPositionResponse> {
     const path = this.getPath('positions/' + instrument);
+    return this.get(path, {});
+  }
+
+  //=================
+  // Get the details of a single instruments position in an Account.
+  //=================
+  public getAccountSummary(): Promise<AccountSummary> {
+    const path = this.getPath('summary');
     return this.get(path, {});
   }
 

@@ -163,3 +163,40 @@ export interface SingleInstrumentPositionResponse {
     position: Position[];
     lastTransactionID: string;
 }
+export interface AccountSummary {
+    id: string;
+    alias: string;
+    currency: string;
+    createdByUserID: number;
+    createdTime: string;
+    resettablePLTime: string;
+    marginRate: number;
+    openTradeCount: number;
+    openPositionCount: number;
+    pendingOrderCount: number;
+    hedgingEnabled: number;
+    unrealizedPL: string;
+    NAV: string;
+    marginUsed: string;
+    marginAvailable: string;
+    positionValue: string;
+    marginCloseoutUnrealizedPL: string;
+    marginCloseoutNAV: string;
+    marginCloseoutMarginUsed: string;
+    marginCloseoutPercent: number;
+    marginCloseoutPositionValue: number;
+    withdrawalLimit: string;
+    marginCallMarginUsed: string;
+    marginCallPercent: number;
+    balance: string;
+    pl: string;
+    resettablePL: string;
+    financing: string;
+    commission: string;
+    dividendAdjustment: string;
+    guaranteedExecutionFees: string;
+    marginCallEnterTime: number;
+    marginCallExtensionCount: number;
+    lastMarginCallExtensionTime: number;
+    lastTransactionID: number;
+}

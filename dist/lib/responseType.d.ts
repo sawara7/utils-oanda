@@ -200,3 +200,7 @@ export interface AccountSummary {
     lastMarginCallExtensionTime: number;
     lastTransactionID: number;
 }
+export interface AccountSummaryResponse {
+    account: AccountSummary;
+    lastTransactionID: string;
+}

@@ -331,3 +331,8 @@ export interface AccountSummary {
   lastMarginCallExtensionTime : number; // # The date/time of the Account’s last margin call extension.
   lastTransactionID : number; // # The ID of the last Transaction created for the Account.
 }
+
+export interface AccountSummaryResponse {
+  account: AccountSummary;
+  lastTransactionID: string;
+}

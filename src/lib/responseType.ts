@@ -1,4 +1,4 @@
-import { TransactionType, OrderFillReason } from "./type";
+import { TransactionType, OrderFillReason, oandaPair } from "./type";
 
 export interface InstrumentsResponse {
   instruments: Instrument[],
@@ -258,4 +258,35 @@ export interface PriceBucket {
 export interface DepthResponse {
   asks: [string, string][];
   bids: [string, string][];
+}
+
+export interface PositionSide {
+  units : string; // # Number of units in the position (negative value indicates short position, // # positive indicates long position).
+  averagePrice : string; // # Volume-weighted average of the underlying Trade open prices for the // # Position.
+  tradeIDs : string[]; // # List of the open Trade IDs which contribute to the open Position.
+  pl : string; // # Profit/loss realized by the PositionSide over the lifetime of the // # Account.
+  unrealizedPL : string; // # The unrealized profit/loss of all open Trades that contribute to this // # PositionSide.
+  resettablePL : string; // # Profit/loss realized by the PositionSide since the Account’s resettablePL // # was last reset by the client.
+  financing : string; // # The total amount of financing paid/collected for this PositionSide over // # the lifetime of the Account.
+  dividendAdjustment : string; // # The total amount of dividend adjustment paid for the PositionSide over // # the lifetime of the Account.
+  guaranteedExecutionFees : string; // # The total amount of fees charged over the lifetime of the Account for the // # execution of guaranteed Stop Loss Orders attached to Trades for this // # PositionSide.
+}
+
+export interface Position {
+  instrument : oandaPair; //# The Position’s Instrument.
+  pl : string; //# Profit/loss realized by the Position over the lifetime of the Account.
+  unrealizedPL : string; //# The unrealized profit/loss of all open Trades that contribute to this # Position.
+  marginUsed : string; //# Margin currently used by the Position.
+  resettablePL : string; //# Profit/loss realized by the Position since the Account’s resettablePL was # last reset by the client.
+  financing : string; //# The total amount of financing paid/collected for this instrument over the # lifetime of the Account.
+  commission : string; //# The total amount of commission paid for this instrument over the lifetime # of the Account.
+  dividendAdjustment : string; //# The total amount of dividend adjustment paid for this instrument over the # lifetime of the Account.
+  guaranteedExecutionFees : string; //# The total amount of fees charged over the lifetime of the Account for the # execution of guaranteed Stop Loss Orders for this instrument.
+  long : PositionSide; //# The details of the long side of the Position.
+  short : PositionSide; //# The details of the short side of the Position.
+}
+
+export interface SingleInstrumentPositionResponse {
+  position: Position[];
+  lastTransactionID: string;
 }

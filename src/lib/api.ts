@@ -8,7 +8,8 @@ import {
   GetTransactionsSinceIDResponse,
   PendingOrderResponse,
   oaCancelOrderResponse,
-  OrderResponse
+  OrderResponse,
+  SingleInstrumentPositionResponse
 } from './responseType';
 import {
   GetPricingRequest,
@@ -18,7 +19,7 @@ import {
   BaseOrderRequest,
   GetOrderRequest
 } from './requestType';
-import { OANDAApiConfig } from './type';
+import { OANDAApiConfig, oandaPair } from './type';
 import { sleep } from 'my-utils';
 
 const URL_API_OANDA = 'https://api-fxtrade.oanda.com';
@@ -116,6 +117,14 @@ export class oaAPIClass extends baseApiClass {
   //=================
   public getInstruments(): Promise<InstrumentsResponse> {
     const path = this.getPath('instruments');
+    return this.get(path, {});
+  }
+
+  //=================
+  // Get the details of a single instruments position in an Account.
+  //=================
+  public getSingleInstrumentPosition(instrument: oandaPair): Promise<SingleInstrumentPositionResponse> {
+    const path = this.getPath('positions/' + instrument);
     return this.get(path, {});
   }
 

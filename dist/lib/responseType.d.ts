@@ -1,4 +1,4 @@
-import { TransactionType, OrderFillReason } from "./type";
+import { TransactionType, OrderFillReason, oandaPair } from "./type";
 export interface InstrumentsResponse {
     instruments: Instrument[];
     lastTransactionID: number;
@@ -134,4 +134,32 @@ export interface PriceBucket {
 export interface DepthResponse {
     asks: [string, string][];
     bids: [string, string][];
+}
+export interface PositionSide {
+    units: string;
+    averagePrice: string;
+    tradeIDs: string[];
+    pl: string;
+    unrealizedPL: string;
+    resettablePL: string;
+    financing: string;
+    dividendAdjustment: string;
+    guaranteedExecutionFees: string;
+}
+export interface Position {
+    instrument: oandaPair;
+    pl: string;
+    unrealizedPL: string;
+    marginUsed: string;
+    resettablePL: string;
+    financing: string;
+    commission: string;
+    dividendAdjustment: string;
+    guaranteedExecutionFees: string;
+    long: PositionSide;
+    short: PositionSide;
+}
+export interface SingleInstrumentPositionResponse {
+    position: Position[];
+    lastTransactionID: string;
 }

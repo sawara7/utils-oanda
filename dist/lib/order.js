@@ -22,9 +22,20 @@ class OANDAOrderClass extends trade_utils_1.BaseOrderClass {
             triggerCondition: 'DEFAULT'
         };
     }
+    get marketOrderRequest() {
+        return {
+            type: 'MARKET',
+            instrument: this.instrument,
+            units: this.units,
+            positionFill: 'DEFAULT'
+        };
+    }
     get request() {
         if (this.type === 'limit') {
             return this.limitOrderRequest;
+        }
+        if (this.type === 'market') {
+            return this.marketOrderRequest;
         }
         throw new Error('failed order create.');
     }

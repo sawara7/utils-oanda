@@ -5,7 +5,8 @@ import {
 
 import {
     BaseOrderRequest,
-    LimitOrderRequest
+    LimitOrderRequest,
+    MarketOrderRequest
 } from ".."
 
 export interface OANDAOrderSettings extends BaseOrderSettings {
@@ -35,9 +36,21 @@ export class OANDAOrderClass extends BaseOrderClass {
         }
     }
 
+    get marketOrderRequest(): MarketOrderRequest {
+        return {
+            type: 'MARKET',
+            instrument: this.instrument,
+            units: this.units,
+            positionFill : 'DEFAULT'
+        }
+    }
+
     get request(): BaseOrderRequest {
         if (this.type === 'limit') {
             return this.limitOrderRequest
+        }
+        if (this.type === 'market') {
+            return this.marketOrderRequest
         }
         throw new Error('failed order create.')
     }

@@ -10,7 +10,7 @@ class OANDAOrderClass extends trade_utils_1.BaseOrderClass {
         return this.market.name;
     }
     get units() {
-        return this.roundSize(this.size) * (this.side === 'buy' ? 1 : -1);
+        return Math.abs(this.roundSize(this.size)) * (this.side === 'buy' ? 1 : -1);
     }
     get limitOrderRequest() {
         return {

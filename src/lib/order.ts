@@ -22,7 +22,7 @@ export class OANDAOrderClass extends BaseOrderClass {
     }
 
     get units(): number {
-        return this.roundSize(this.size) * (this.side === 'buy'? 1: -1)
+        return Math.abs(this.roundSize(this.size)) * (this.side === 'buy'? 1: -1)
     }
 
     get limitOrderRequest(): LimitOrderRequest {

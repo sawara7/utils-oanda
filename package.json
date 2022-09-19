@@ -8,13 +8,14 @@
   },
   "main": "dist/index.js",
   "scripts": {
+    "test": "jest ./dist",
+    "build": "npm run install-rimraf && rimraf dist && npm install && tsc && npm run test",
     "install-rimraf": "npm install --save-dev rimraf",
     "cleanup": "rimraf package-lock.json && rimraf dist && rimraf node_modules",
-    "test": "jest",
-    "build": "npm run install-rimraf && npm run cleanup && npm install && tsc && npm run test"
+    "rebuild": "npm run install-rimraf && npm run cleanup && npm run build"
   },
   "author": "sawara",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/jest": "^27.5.1",
     "jest": "^28.1.0",

@@ -19,6 +19,9 @@ class OANDAPositionClass extends trade_utils_1.BasePositionClass {
     }
     placeOrder(order) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (this._backtestMode) {
+                // return 
+            }
             return yield this._api.postOrder(order.request);
         });
     }
@@ -55,6 +58,9 @@ class OANDAPositionClass extends trade_utils_1.BasePositionClass {
     }
     get closeOrder() {
         return super.closeOrder;
+    }
+    get losscutOrder() {
+        return super.losscutOrder;
     }
 }
 exports.OANDAPositionClass = OANDAPositionClass;

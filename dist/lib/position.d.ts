@@ -13,4 +13,5 @@ export declare class OANDAPositionClass extends BasePositionClass {
     doCancel(): Promise<void>;
     get openOrder(): OANDAOrderClass;
     get closeOrder(): OANDAOrderClass;
+    get losscutOrder(): OANDAOrderClass;
 }

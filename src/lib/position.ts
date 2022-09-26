@@ -7,6 +7,7 @@ import {
     oaAPIClass,
     oaOrderResponse
 } from ".."
+
 import { OANDAOrderClass } from "./order"
 
 export interface OANDAPositionParameters extends BasePositionParameters {
@@ -22,6 +23,9 @@ export class OANDAPositionClass extends BasePositionClass {
     }
 
     private async placeOrder(order: OANDAOrderClass): Promise<oaOrderResponse> {
+        if (this._backtestMode) {
+            // return 
+        }
         return await this._api.postOrder(order.request)
     }
 
@@ -57,5 +61,9 @@ export class OANDAPositionClass extends BasePositionClass {
     
     get closeOrder(): OANDAOrderClass {
         return super.closeOrder as OANDAOrderClass
+    }
+
+    get losscutOrder(): OANDAOrderClass {
+        return super.losscutOrder as OANDAOrderClass
     }
 }

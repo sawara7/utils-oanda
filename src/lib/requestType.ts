@@ -23,6 +23,11 @@ export interface GetTradeRequest {
   beforeID?: string,
 }
 
+export interface ClientExtensions {
+  id: string,
+  tag: string,
+  comment: string
+}
 export interface BaseOrderRequest {
   type: OrderType,
   instrument: string,
@@ -32,8 +37,8 @@ export interface BaseOrderRequest {
   stopLossOnFill?: StopLossDetails,
   guaranteedStopLossOnFill?: GuaranteedStopLossDetails,
   trailingStopLossOnFill?: TrailingStopLossDetails
+  clientExtensions?: ClientExtensions
 }
-
 export interface GetOrderRequest {
   ids: string //query	List of OrderID (csv)	List of Order IDs to retrieve
   state?: string //query	OrderStateFilter	The state to filter the requested Orders by [default=PENDING]

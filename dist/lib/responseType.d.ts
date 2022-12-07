@@ -111,7 +111,7 @@ export interface Trade {
     dividendAdjustment: number;
     closeTime?: number;
 }
-export declare type TradeState = "OPEN" | "CLOSED" | "CLOSE_WHEN_TRADEABLE";
+export type TradeState = "OPEN" | "CLOSED" | "CLOSE_WHEN_TRADEABLE";
 export interface PricingResponse {
     prices: ClientPrice[];
     time: number;

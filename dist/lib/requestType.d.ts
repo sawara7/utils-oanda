@@ -1,9 +1,9 @@
 import { TradeState } from "./responseType";
 import { OrderTriggerCondition, TransactionType } from "./type";
-export declare type AcceptDateTimeFormat = 'UNIX' | 'RFC3339';
-export declare type OrderType = 'MARKET' | 'LIMIT';
-export declare type TimeInForce = 'FOK' | 'GTC' | 'GTD' | 'GFD';
-export declare type OrderPositionFill = 'DEFAULT';
+export type AcceptDateTimeFormat = 'UNIX' | 'RFC3339';
+export type OrderType = 'MARKET' | 'LIMIT';
+export type TimeInForce = 'FOK' | 'GTC' | 'GTD' | 'GFD';
+export type OrderPositionFill = 'DEFAULT';
 export interface GetTransactionsSinceIDRequest {
     id: string;
     type?: TransactionType;
@@ -17,6 +17,11 @@ export interface GetTradeRequest {
     count?: number;
     beforeID?: string;
 }
+export interface ClientExtensions {
+    id: string;
+    tag: string;
+    comment: string;
+}
 export interface BaseOrderRequest {
     type: OrderType;
     instrument: string;
@@ -26,6 +31,7 @@ export interface BaseOrderRequest {
     stopLossOnFill?: StopLossDetails;
     guaranteedStopLossOnFill?: GuaranteedStopLossDetails;
     trailingStopLossOnFill?: TrailingStopLossDetails;
+    clientExtensions?: ClientExtensions;
 }
 export interface GetOrderRequest {
     ids: string;

@@ -1,3 +1,4 @@
+import { ClientExtensions } from "./requestType";
 import { TransactionType, OrderFillReason, oandaPair } from "./type";
 
 export interface InstrumentsResponse {
@@ -130,6 +131,7 @@ export interface Trade {
   financing: number,
   dividendAdjustment: number,
   closeTime?: number,
+  clientExtensions : ClientExtensions,
   // takeProfitOrder : (TakeProfitOrder),
   // stopLossOrder : (StopLossOrder),
   // trailingStopLossOrder : (TrailingStopLossOrder)

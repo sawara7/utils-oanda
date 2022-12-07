@@ -1,3 +1,4 @@
+import { ClientExtensions } from "./requestType";
 import { TransactionType, OrderFillReason, oandaPair } from "./type";
 export interface InstrumentsResponse {
     instruments: Instrument[];
@@ -110,6 +111,7 @@ export interface Trade {
     financing: number;
     dividendAdjustment: number;
     closeTime?: number;
+    clientExtensions: ClientExtensions;
 }
 export type TradeState = "OPEN" | "CLOSED" | "CLOSE_WHEN_TRADEABLE";
 export interface PricingResponse {

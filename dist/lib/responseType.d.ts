@@ -97,20 +97,20 @@ export interface GetTradeResponse {
 export interface Trade {
     id: string;
     instrument: string;
-    price: number;
-    openTime: number;
+    price: string;
+    openTime: string;
     state: TradeState;
-    initialUnits: number;
+    initialUnits: string;
     initialMarginRequired: number;
-    currentUnits: number;
-    realizedPL: number;
-    unrealizedPL: number;
-    marginUsed: number;
-    averageClosePrice: number;
+    currentUnits: string;
+    realizedPL: string;
+    unrealizedPL: string;
+    marginUsed: string;
+    averageClosePrice: string;
     closingTransactionIDs: string[];
-    financing: number;
-    dividendAdjustment: number;
-    closeTime?: number;
+    financing: string;
+    dividendAdjustment: string;
+    closeTime?: string;
     clientExtensions: ClientExtensions;
 }
 export type TradeState = "OPEN" | "CLOSED" | "CLOSE_WHEN_TRADEABLE";

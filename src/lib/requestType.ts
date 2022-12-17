@@ -3,7 +3,6 @@ import { oandaOrderType, oaOrderState, OrderTriggerCondition, TransactionType } 
 
 // Ticker
 export type AcceptDateTimeFormat = 'UNIX' | 'RFC3339';
-export type OrderType = 'MARKET' | 'LIMIT';
 export type TimeInForce = 'FOK' | 'GTC' | 'GTD' | 'GFD';
 export type OrderPositionFill = 'DEFAULT';
 
@@ -29,7 +28,7 @@ export interface ClientExtensions {
   comment: string
 }
 export interface BaseOrderRequest {
-  type: OrderType,
+  type: oandaOrderType,
   instrument: string,
   units: number,
   positionFill : OrderPositionFill,

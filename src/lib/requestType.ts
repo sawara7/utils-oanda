@@ -39,7 +39,7 @@ export interface BaseOrderRequest {
   clientExtensions?: ClientExtensions
 }
 export interface GetOrderRequest {
-  ids: string //query	List of OrderID (csv)	List of Order IDs to retrieve
+  ids?: string //query	List of OrderID (csv)	List of Order IDs to retrieve
   state?: string //query	OrderStateFilter	The state to filter the requested Orders by [default=PENDING]
   instrument?: string	//query	InstrumentName	The instrument to filter the requested orders by
   count?: number //query	integer	The maximum number of Orders to return [default=50, maximum=500]

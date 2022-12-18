@@ -33,7 +33,7 @@ export interface BaseOrderRequest {
     clientExtensions?: ClientExtensions;
 }
 export interface GetOrderRequest {
-    ids: string;
+    ids?: string;
     state?: string;
     instrument?: string;
     count?: number;

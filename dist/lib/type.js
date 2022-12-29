@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TransactionTypes = exports.oandaPairs = exports.oaOrderStates = exports.orderTriggerConditions = exports.oandaOrderTypes = void 0;
+exports.TransactionTypes = exports.oandaPairs = exports.oaOrderStates = exports.orderTriggerConditions = exports.oandaOrderTypes = exports.MAX_ORDER_SIZE = exports.MAX_POSITION_SIZE = void 0;
+exports.MAX_POSITION_SIZE = 1000;
+exports.MAX_ORDER_SIZE = 1000;
 exports.oandaOrderTypes = [
     "MARKET",
     "LIMIT",

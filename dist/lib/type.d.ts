@@ -1,3 +1,5 @@
+export declare const MAX_POSITION_SIZE = 1000;
+export declare const MAX_ORDER_SIZE = 1000;
 export interface ApiConfig {
     endPoint?: string;
     keepAlive?: boolean;

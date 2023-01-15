@@ -71,14 +71,14 @@ export interface MarketIfTouchedOrderRequest extends BaseOrderRequest{
 }
 export interface TakeProfitDetails {
   price: string,
-  timeInForce: TimeInForce,
+  timeInForce?: TimeInForce,
   gtdTime?: number,
 }
 export interface StopLossDetails {
-  price: string,
-  timeInForce: TimeInForce,
+  price?: string,
+  timeInForce?: TimeInForce,
   gtdTime?: number,
-  distance: number,
+  distance?: number,
 }
 
 export interface GuaranteedStopLossDetails {

@@ -101,6 +101,10 @@ class oaAPIClass extends base_1.baseApiClass {
         const path = this.getPath('openTrades');
         return this.get(path, {});
     }
+    putTradeOrders(tradeID, request) {
+        const path = this.getPath('trades/' + tradeID + '/orders');
+        return this.put(path, request);
+    }
     //=================
     // PRICING
     //=================

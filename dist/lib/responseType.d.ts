@@ -206,3 +206,15 @@ export interface AccountSummaryResponse {
     account: AccountSummary;
     lastTransactionID: string;
 }
+export interface PutTradeOrdersResponse {
+    takeProfitOrderCancelTransaction?: OrderCancelTransaction;
+    takeProfitOrderFillTransaction?: OrderFillTransaction;
+    takeProfitOrderCreatedCancelTransaction?: OrderCancelTransaction;
+    stopLossOrderCancelTransaction?: OrderCancelTransaction;
+    stopLossOrderFillTransaction?: OrderFillTransaction;
+    stopLossOrderCreatedCancelTransaction?: OrderCancelTransaction;
+    trailingStopLossOrderCancelTransaction?: OrderCancelTransaction;
+    guaranteedStopLossOrderCancelTransaction?: OrderCancelTransaction;
+    relatedTransactionIDs: string[];
+    lastTransactionID: string;
+}

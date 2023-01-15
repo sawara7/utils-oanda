@@ -11,7 +11,8 @@ import {
   OrderResponse,
   SingleInstrumentPositionResponse,
   AccountSummary,
-  AccountSummaryResponse
+  AccountSummaryResponse,
+  PutTradeOrdersResponse
 } from './responseType';
 import {
   GetPricingRequest,
@@ -19,7 +20,8 @@ import {
   GetTradeRequest,
   GetTransactionsSinceIDRequest,
   BaseOrderRequest,
-  GetOrderRequest
+  GetOrderRequest,
+  PutTradeOrdersRequest
 } from './requestType';
 import { OANDAApiConfig, oandaPair } from './type';
 import { sleep } from 'my-utils';
@@ -104,6 +106,11 @@ export class oaAPIClass extends baseApiClass {
   public getOpenTrade(): Promise<GetTradeResponse> {
     const path = this.getPath('openTrades');
     return this.get(path, {});
+  }
+
+  public putTradeOrders(tradeID: string, request: PutTradeOrdersRequest): Promise<PutTradeOrdersResponse> {
+    const path = this.getPath('trades/' + tradeID + '/orders');
+    return this.put(path, request)
   }
 
   //=================

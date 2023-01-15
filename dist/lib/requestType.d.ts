@@ -89,3 +89,9 @@ export interface GetPricingRequest {
     instruments: string;
     since?: number;
 }
+export interface PutTradeOrdersRequest {
+    takeProfit?: TakeProfitDetails;
+    stopLoss?: StopLossDetails;
+    trailingStopLoss?: TrailingStopLossDetails;
+    guaranteedStopLoss?: GuaranteedStopLossDetails;
+}

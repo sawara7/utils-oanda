@@ -1,9 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TransactionTypes = exports.oandaPairs = exports.oaOrderStates = exports.orderTriggerConditions = exports.oandaOrderTypes = exports.MAX_ORDER_SIZE = exports.MAX_POSITION_SIZE = void 0;
+exports.TransactionTypes = exports.oandaPairs = exports.OrderStates = exports.orderTriggerConditions = exports.OrderTypes = exports.TimeInForces = exports.MAX_ORDER_SIZE = exports.MAX_POSITION_SIZE = void 0;
 exports.MAX_POSITION_SIZE = 1000;
 exports.MAX_ORDER_SIZE = 1000;
-exports.oandaOrderTypes = [
+exports.TimeInForces = [
+    "GTC",
+    "GTD",
+    "GFD",
+    "FOK",
+    "IOC" //The Order must be “Immediately partially filled Or Cancelled”
+];
+exports.OrderTypes = [
     "MARKET",
     "LIMIT",
     "STOP",
@@ -21,7 +28,7 @@ exports.orderTriggerConditions = [
     "ASK",
     "MID" //Trigger an Order by comparing its price to the midpoint regardless of whether it is long or short.
 ];
-exports.oaOrderStates = [
+exports.OrderStates = [
     "PENDING",
     "FILLED",
     "TRIGGERED",

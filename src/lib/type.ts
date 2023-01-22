@@ -1,5 +1,14 @@
 export const MAX_POSITION_SIZE = 1000
 export const MAX_ORDER_SIZE = 1000
+
+export type OrderID = string
+export type DateTime = string
+export type TradeID = string
+export type ClientID = string
+export type PriceValue = string
+export type TransactionID = string
+export type DecimalNumber = string
+
 export interface ApiConfig {
   endPoint?: string;
   keepAlive?: boolean;
@@ -12,7 +21,16 @@ export interface OANDAApiConfig extends ApiConfig {
   minOrderInterval?: number;
 }
 
-export const oandaOrderTypes = [
+export const TimeInForces = [
+  "GTC",	//The Order is “Good unTil Cancelled”
+  "GTD",	//The Order is “Good unTil Date” and will be cancelled at the provided time
+  "GFD",	//The Order is “Good For Day” and will be cancelled at 5pm New York time
+  "FOK",	//The Order must be immediately “Filled Or Killed”
+  "IOC"	//The Order must be “Immediately partially filled Or Cancelled”
+]
+export type TimeInForce = typeof TimeInForces[number];
+
+export const OrderTypes = [
   "MARKET",	//A Market Order
   "LIMIT", //A Limit Order
   "STOP",	//A Stop Order
@@ -23,7 +41,7 @@ export const oandaOrderTypes = [
   "TRAILING_STOP_LOSS",	//A Trailing Stop Loss Order
   "FIXED_PRICE"	//A Fixed Price Order
 ] as const;
-export type oandaOrderType = typeof oandaOrderTypes[number];
+export type OrderType = typeof OrderTypes[number];
 
 export const orderTriggerConditions = [
   "DEFAULT",	//Trigger an Order the “natural” way: compare its price to the ask for long Orders and bid for short Orders.
@@ -34,13 +52,13 @@ export const orderTriggerConditions = [
 ] as const;
 export type OrderTriggerCondition = typeof orderTriggerConditions[number];
 
-export const oaOrderStates = [
+export const OrderStates = [
   "PENDING",
   "FILLED",
   "TRIGGERED",
   "CANCELLED"
 ] as const;
-export type oaOrderState = typeof oaOrderStates[number];
+export type OrderState = typeof OrderStates[number];
 
 export const oandaPairs = [
 'AUD_CHF',

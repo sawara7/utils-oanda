@@ -1,7 +1,6 @@
 import { TradeState } from "./responseType";
-import { oandaOrderType, OrderTriggerCondition, TransactionType } from "./type";
+import { OrderType, OrderTriggerCondition, TransactionType, TimeInForce } from "./type";
 export type AcceptDateTimeFormat = 'UNIX' | 'RFC3339';
-export type TimeInForce = 'FOK' | 'GTC' | 'GTD' | 'GFD';
 export type OrderPositionFill = 'DEFAULT';
 export interface GetTransactionsSinceIDRequest {
     id: string;
@@ -22,7 +21,7 @@ export interface ClientExtensions {
     comment: string;
 }
 export interface BaseOrderRequest {
-    type: oandaOrderType;
+    type: OrderType;
     instrument: string;
     units: number;
     positionFill: OrderPositionFill;

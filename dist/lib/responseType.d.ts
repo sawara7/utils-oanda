@@ -1,5 +1,5 @@
 import { ClientExtensions } from "./requestType";
-import { TransactionType, OrderFillReason, oandaPair } from "./type";
+import { TransactionType, OrderFillReason, oandaPair, OrderTriggerCondition, OrderID, DateTime, OrderState, TradeID, ClientID, PriceValue, OrderType, TransactionID, TimeInForce, DecimalNumber } from "./type";
 export interface InstrumentsResponse {
     instruments: Instrument[];
     lastTransactionID: number;
@@ -112,6 +112,9 @@ export interface Trade {
     dividendAdjustment: string;
     closeTime?: string;
     clientExtensions: ClientExtensions;
+    takeProfitOrder?: TakeProfitOrder;
+    stopLossOrder?: StopLossOrder;
+    trailingStopLossOrder?: TrailingStopLossOrder;
 }
 export type TradeState = "OPEN" | "CLOSED" | "CLOSE_WHEN_TRADEABLE";
 export interface PricingResponse {
@@ -217,4 +220,61 @@ export interface PutTradeOrdersResponse {
     guaranteedStopLossOrderCancelTransaction?: OrderCancelTransaction;
     relatedTransactionIDs: string[];
     lastTransactionID: string;
+}
+export interface TakeProfitOrder {
+    id: OrderID;
+    createTime: DateTime;
+    state: OrderState;
+    clientExtensions: ClientExtensions;
+    type: OrderType;
+    tradeID: TradeID;
+    clientTradeID: ClientID;
+    price: PriceValue;
+    timeInForce: TimeInForce;
+    gtdTime: DateTime;
+    triggerCondition: OrderTriggerCondition;
+    fillingTransactionID: TransactionID;
+    filledTime: DateTime;
+    tradeOpenedID: TradeID;
+    tradeReducedID: TradeID;
+    tradeClosedIDs: TradeID[];
+    cancellingTransactionID: TransactionID;
+    cancelledTime: DateTime;
+    replacesOrderID: OrderID;
+    replacedByOrderID: OrderID;
+}
+export interface StopLossOrder {
+    id: OrderID;
+    createTime: DateTime;
+    state: OrderState;
+    clientExtensions: ClientExtensions;
+    type: OrderType;
+    guaranteedExecutionPremium: DecimalNumber;
+    tradeID: TradeID;
+    clientTradeID: ClientID;
+    price: PriceValue;
+    distance: DecimalNumber;
+    timeInForce: TimeInForce;
+    gtdTime: DateTime;
+    triggerCondition: OrderTriggerCondition;
+    guaranteed: boolean;
+    fillingTransactionID: TransactionID;
+    filledTime: DateTime;
+    tradeOpenedID: TradeID;
+    tradeReducedID: TradeID;
+    tradeClosedIDs: TradeID[];
+    cancellingTransactionID: TransactionID;
+    cancelledTime: DateTime;
+    replacesOrderID: OrderID;
+    replacedByOrderID: OrderID;
+}
+export interface TrailingStopLossOrder {
+    type: OrderType;
+    tradeID: TradeID;
+    clientTradeID: ClientID;
+    distance: DecimalNumber;
+    timeInForce: TimeInForce;
+    gtdTime: DateTime;
+    triggerCondition: OrderTriggerCondition;
+    clientExtensions: ClientExtensions;
 }

@@ -5,6 +5,7 @@ import {
 
 import {
     BaseOrderRequest,
+    InstrumentName,
     LimitOrderRequest,
     MarketOrderRequest
 } from ".."
@@ -17,7 +18,7 @@ export class OANDAOrderClass extends BaseOrderClass {
         super(params)
     }
 
-    get instrument(): string {
+    get instrument(): InstrumentName {
         return this.market.name
     }
 

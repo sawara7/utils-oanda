@@ -11,5 +11,5 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const type_1 = require("./type");
 test('Instrument', () => __awaiter(void 0, void 0, void 0, function* () {
-    expect(type_1.oandaPairs.includes("USD_JPY")).toBeTruthy();
+    expect(type_1.InstrumentNames.includes("USD_JPY")).toBeTruthy();
 }));

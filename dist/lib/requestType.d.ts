@@ -1,7 +1,7 @@
 import { TradeState } from "./responseType";
-import { OrderType, OrderTriggerCondition, TransactionType, TimeInForce } from "./type";
-export type AcceptDateTimeFormat = 'UNIX' | 'RFC3339';
-export type OrderPositionFill = 'DEFAULT';
+import { OrderType, OrderTriggerCondition, TransactionType, TimeInForce, InstrumentName, DecimalNumber, PriceValue, DateTime } from "./type";
+export declare type AcceptDateTimeFormat = 'UNIX' | 'RFC3339';
+export declare type OrderPositionFill = 'DEFAULT';
 export interface GetTransactionsSinceIDRequest {
     id: string;
     type?: TransactionType;
@@ -11,7 +11,7 @@ export interface GetTransactionsStreamRequest {
 export interface GetTradeRequest {
     ids?: string;
     state?: TradeState;
-    instrument?: string;
+    instrument?: InstrumentName;
     count?: number;
     beforeID?: string;
 }
@@ -22,8 +22,8 @@ export interface ClientExtensions {
 }
 export interface BaseOrderRequest {
     type: OrderType;
-    instrument: string;
-    units: number;
+    instrument: InstrumentName;
+    units: DecimalNumber;
     positionFill: OrderPositionFill;
     takeProfitOnFill?: TakeProfitDetails;
     stopLossOnFill?: StopLossDetails;
@@ -40,52 +40,52 @@ export interface GetOrderRequest {
 }
 export interface MarketOrderRequest extends BaseOrderRequest {
     timeInForce?: TimeInForce;
-    priceBound?: number;
+    priceBound?: PriceValue;
 }
 export interface LimitOrderRequest extends BaseOrderRequest {
-    price: string;
+    price: PriceValue;
     timeInForce?: TimeInForce;
-    gtdTime?: string;
+    gtdTime?: DateTime;
     triggerCondition: OrderTriggerCondition;
 }
 export interface StopOrderRequest extends BaseOrderRequest {
-    price: string;
-    priceBound?: number;
+    price: PriceValue;
+    priceBound?: PriceValue;
     timeInForce?: TimeInForce;
-    gtdTime: number;
+    gtdTime: DateTime;
     triggerCondition: OrderTriggerCondition;
 }
 export interface MarketIfTouchedOrderRequest extends BaseOrderRequest {
-    price: string;
-    priceBound?: number;
+    price: PriceValue;
+    priceBound?: PriceValue;
     timeInForce?: TimeInForce;
-    gtdTime: number;
+    gtdTime: DateTime;
     triggerCondition: OrderTriggerCondition;
 }
 export interface TakeProfitDetails {
-    price: string;
+    price: PriceValue;
     timeInForce?: TimeInForce;
-    gtdTime?: number;
+    gtdTime?: DateTime;
 }
 export interface StopLossDetails {
-    price?: string;
+    price?: PriceValue;
     timeInForce?: TimeInForce;
-    gtdTime?: number;
+    gtdTime?: DateTime;
     distance?: number;
 }
 export interface GuaranteedStopLossDetails {
-    price: string;
+    price: PriceValue;
     timeInForce: TimeInForce;
-    gtdTime?: number;
+    gtdTime?: DateTime;
     distance: number;
 }
 export interface TrailingStopLossDetails {
     timeInForce: TimeInForce;
-    gtdTime?: number;
+    gtdTime?: DateTime;
     distance: number;
 }
 export interface GetPricingRequest {
-    instruments: string;
+    instruments: InstrumentName;
     since?: number;
 }
 export interface PutTradeOrdersRequest {

@@ -1,40 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TransactionTypes = exports.oandaPairs = exports.OrderStates = exports.orderTriggerConditions = exports.OrderTypes = exports.TimeInForces = exports.MAX_ORDER_SIZE = exports.MAX_POSITION_SIZE = void 0;
+exports.TransactionTypes = exports.OrderStates = exports.orderTriggerConditions = exports.OrderTypes = exports.TimeInForces = exports.InstrumentTypes = exports.InstrumentNames = exports.MAX_ORDER_SIZE = exports.MAX_POSITION_SIZE = void 0;
 exports.MAX_POSITION_SIZE = 1000;
 exports.MAX_ORDER_SIZE = 1000;
-exports.TimeInForces = [
-    "GTC",
-    "GTD",
-    "GFD",
-    "FOK",
-    "IOC" //The Order must be “Immediately partially filled Or Cancelled”
-];
-exports.OrderTypes = [
-    "MARKET",
-    "LIMIT",
-    "STOP",
-    "MARKET_IF_TOUCHED",
-    "TAKE_PROFIT",
-    "STOP_LOSS",
-    "GUARANTEED_STOP_LOSS",
-    "TRAILING_STOP_LOSS",
-    "FIXED_PRICE" //A Fixed Price Order
-];
-exports.orderTriggerConditions = [
-    "DEFAULT",
-    "INVERSE",
-    "BID",
-    "ASK",
-    "MID" //Trigger an Order by comparing its price to the midpoint regardless of whether it is long or short.
-];
-exports.OrderStates = [
-    "PENDING",
-    "FILLED",
-    "TRIGGERED",
-    "CANCELLED"
-];
-exports.oandaPairs = [
+exports.InstrumentNames = [
     'AUD_CHF',
     'CAD_SGD',
     'USD_INR',
@@ -106,6 +75,42 @@ exports.oandaPairs = [
     'USD_CAD',
     'EUR_JPY',
     'EUR_GBP'
+];
+exports.InstrumentTypes = [
+    'CURRENCY',
+    'CFD',
+    'METAL', //Metal
+];
+exports.TimeInForces = [
+    "GTC",
+    "GTD",
+    "GFD",
+    "FOK",
+    "IOC" //The Order must be “Immediately partially filled Or Cancelled”
+];
+exports.OrderTypes = [
+    "MARKET",
+    "LIMIT",
+    "STOP",
+    "MARKET_IF_TOUCHED",
+    "TAKE_PROFIT",
+    "STOP_LOSS",
+    "GUARANTEED_STOP_LOSS",
+    "TRAILING_STOP_LOSS",
+    "FIXED_PRICE" //A Fixed Price Order
+];
+exports.orderTriggerConditions = [
+    "DEFAULT",
+    "INVERSE",
+    "BID",
+    "ASK",
+    "MID" //Trigger an Order by comparing its price to the midpoint regardless of whether it is long or short.
+];
+exports.OrderStates = [
+    "PENDING",
+    "FILLED",
+    "TRIGGERED",
+    "CANCELLED"
 ];
 exports.TransactionTypes = [
     'ORDER',

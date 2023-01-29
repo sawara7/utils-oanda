@@ -1,12 +1,12 @@
 import { ClientExtensions } from "./requestType";
-import { TransactionType, OrderFillReason, oandaPair, OrderTriggerCondition, OrderID, DateTime, OrderState, TradeID, ClientID, PriceValue, OrderType, TransactionID, TimeInForce, DecimalNumber } from "./type";
+import { TransactionType, OrderFillReason, InstrumentName, OrderTriggerCondition, OrderID, DateTime, OrderState, TradeID, ClientID, PriceValue, OrderType, TransactionID, TimeInForce, DecimalNumber, InstrumentType } from "./type";
 export interface InstrumentsResponse {
     instruments: Instrument[];
     lastTransactionID: number;
 }
 export interface Instrument {
-    name: string;
-    type: string;
+    name: InstrumentName;
+    type: InstrumentType;
     displayName: string;
     pipLocation: number;
     displayPrecision: number;
@@ -51,7 +51,7 @@ export interface oaBaseOrder {
     type: string;
 }
 export interface oaBasicOrder extends oaBaseOrder {
-    instrument: string;
+    instrument: InstrumentName;
     price: string;
     units: string;
     state: string;
@@ -73,7 +73,7 @@ export interface OrderFillTransaction extends Transaction {
     type: TransactionType;
     orderID: string;
     clientOrderID: string;
-    instrument: string;
+    instrument: InstrumentName;
     units: string;
     gainQuoteHomeConversionFactor: string;
     lossQuoteHomeConversionFactor: string;
@@ -96,7 +96,7 @@ export interface GetTradeResponse {
 }
 export interface Trade {
     id: string;
-    instrument: string;
+    instrument: InstrumentName;
     price: string;
     openTime: string;
     state: TradeState;
@@ -116,7 +116,7 @@ export interface Trade {
     stopLossOrder?: StopLossOrder;
     trailingStopLossOrder?: TrailingStopLossOrder;
 }
-export type TradeState = "OPEN" | "CLOSED" | "CLOSE_WHEN_TRADEABLE";
+export declare type TradeState = "OPEN" | "CLOSED" | "CLOSE_WHEN_TRADEABLE";
 export interface PricingResponse {
     prices: ClientPrice[];
     time: number;
@@ -152,7 +152,7 @@ export interface PositionSide {
     guaranteedExecutionFees: string;
 }
 export interface Position {
-    instrument: oandaPair;
+    instrument: InstrumentName;
     pl: string;
     unrealizedPL: string;
     marginUsed: string;

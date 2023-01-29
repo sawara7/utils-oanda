@@ -23,7 +23,7 @@ import {
   GetOrderRequest,
   PutTradeOrdersRequest
 } from './requestType';
-import { OANDAApiConfig, oandaPair } from './type';
+import { OANDAApiConfig, InstrumentName } from './type';
 import { sleep } from 'my-utils';
 
 const URL_API_OANDA = 'https://api-fxtrade.oanda.com';
@@ -132,7 +132,7 @@ export class oaAPIClass extends baseApiClass {
   //=================
   // Get the details of a single instruments position in an Account.
   //=================
-  public getSingleInstrumentPosition(instrument: oandaPair): Promise<SingleInstrumentPositionResponse> {
+  public getSingleInstrumentPosition(instrument: InstrumentName): Promise<SingleInstrumentPositionResponse> {
     const path = this.getPath('positions/' + instrument);
     return this.get(path, {});
   }

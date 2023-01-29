@@ -1,5 +1,5 @@
 import { ClientExtensions } from "./requestType";
-import { TransactionType, OrderFillReason, oandaPair, OrderTriggerCondition, OrderID, DateTime, OrderState, TradeID, ClientID, PriceValue, OrderType, TransactionID, TimeInForce, DecimalNumber } from "./type";
+import { TransactionType, OrderFillReason, InstrumentName, OrderTriggerCondition, OrderID, DateTime, OrderState, TradeID, ClientID, PriceValue, OrderType, TransactionID, TimeInForce, DecimalNumber, InstrumentType } from "./type";
 
 export interface InstrumentsResponse {
   instruments: Instrument[],
@@ -7,8 +7,8 @@ export interface InstrumentsResponse {
 }
 
 export interface Instrument {
-  name: string,
-  type: string,
+  name: InstrumentName,
+  type: InstrumentType,
   displayName: string,
   pipLocation: number,
   displayPrecision: number,
@@ -62,7 +62,7 @@ export interface oaBaseOrder {
 }
 
 export interface oaBasicOrder extends oaBaseOrder {
-  instrument: string,
+  instrument: InstrumentName,
   price: string,
   units: string
   state: string
@@ -86,7 +86,7 @@ export interface OrderFillTransaction extends Transaction{
   type: TransactionType,
   orderID: string,
   clientOrderID: string,
-  instrument: string,
+  instrument: InstrumentName,
   units: string,
   gainQuoteHomeConversionFactor: string,
   lossQuoteHomeConversionFactor: string,
@@ -116,7 +116,7 @@ export interface GetTradeResponse {
 }
 export interface Trade {
   id: string,
-  instrument: string,
+  instrument: InstrumentName,
   price: string,
   openTime: string,
   state: TradeState,
@@ -275,7 +275,7 @@ export interface PositionSide {
 }
 
 export interface Position {
-  instrument : oandaPair; //# The Position’s Instrument.
+  instrument : InstrumentName; //# The Position’s Instrument.
   pl : string; //# Profit/loss realized by the Position over the lifetime of the Account.
   unrealizedPL : string; //# The unrealized profit/loss of all open Trades that contribute to this # Position.
   marginUsed : string; //# Margin currently used by the Position.

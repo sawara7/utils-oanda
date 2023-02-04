@@ -4,6 +4,32 @@ export interface InstrumentsResponse {
     instruments: Instrument[];
     lastTransactionID: number;
 }
+export interface InstrumentCommission {
+    commission: DecimalNumber;
+    unitsTraded: DecimalNumber;
+    minimumCommission: DecimalNumber;
+}
+export declare const DayOfWeeks: readonly ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+export type DayOfWeek = typeof DayOfWeeks[number];
+export interface FinancingDayOfWeek {
+    dayOfWeek: DayOfWeek;
+    daysCharged: number;
+}
+export interface InstrumentCommission {
+    longRate: DecimalNumber;
+    shortRate: DecimalNumber;
+    financingDaysOfWeek: FinancingDayOfWeek[];
+}
+export interface Tag {
+    type: string;
+    name: string;
+}
+export interface GuaranteedStopLossOrderLevelRestriction {
+    volume: DecimalNumber;
+    priceRange: DecimalNumber;
+}
+export declare const guaranteedStopLossOrderModeForInstruments: readonly ["DISABLED", "ALLOWED", "REQUIRED"];
+export type guaranteedStopLossOrderModeForInstrument = typeof guaranteedStopLossOrderModeForInstruments[number];
 export interface Instrument {
     name: InstrumentName;
     type: InstrumentType;
@@ -11,16 +37,19 @@ export interface Instrument {
     pipLocation: number;
     displayPrecision: number;
     tradeUnitsPrecision: number;
-    minimumTradeSize: number;
-    maximumTrailingStopDistance: number;
-    minimumGuaranteedStopLossDistance: number;
-    minimumTrailingStopDistance: number;
-    maximumPositionSize: number;
-    maximumOrderUnits: number;
-    marginRate: number;
-    commission: string;
-    guaranteedStopLossOrderMode: string;
-    guaranteedStopLossOrderExecutionPremium: number;
+    minimumTradeSize: DecimalNumber;
+    maximumTrailingStopDistance: DecimalNumber;
+    minimumGuaranteedStopLossDistance: DecimalNumber;
+    minimumTrailingStopDistance: DecimalNumber;
+    maximumPositionSize: DecimalNumber;
+    maximumOrderUnits: DecimalNumber;
+    marginRate: DecimalNumber;
+    commission: InstrumentCommission;
+    guaranteedStopLossOrderMode: guaranteedStopLossOrderModeForInstrument;
+    guaranteedStopLossOrderExecutionPremium: DecimalNumber;
+    guaranteedStopLossOrderLevelRestriction: GuaranteedStopLossOrderLevelRestriction;
+    financing: InstrumentCommission;
+    tags: Tag[];
 }
 export interface oaOrderResponse {
     orderCreateTransaction: Transaction;
@@ -116,7 +145,7 @@ export interface Trade {
     stopLossOrder?: StopLossOrder;
     trailingStopLossOrder?: TrailingStopLossOrder;
 }
-export declare type TradeState = "OPEN" | "CLOSED" | "CLOSE_WHEN_TRADEABLE";
+export type TradeState = "OPEN" | "CLOSED" | "CLOSE_WHEN_TRADEABLE";
 export interface PricingResponse {
     prices: ClientPrice[];
     time: number;

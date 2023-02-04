@@ -8,11 +8,9 @@
   },
   "main": "dist/index.js",
   "scripts": {
-    "test": "jest ./dist",
-    "build": "npm run install-rimraf && rimraf dist && npm install && tsc && npm run test",
     "install-rimraf": "npm install --save-dev rimraf",
     "cleanup": "rimraf package-lock.json && rimraf dist && rimraf node_modules",
-    "rebuild": "npm run install-rimraf && npm run cleanup && npm run build"
+    "build": "npm run cleanup && npm install && tsc"
   },
   "author": "sawara",
   "license": "MIT",

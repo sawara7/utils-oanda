@@ -1,12 +1,5 @@
-import { BaseOrderSettings, BaseOrderClass } from "trade-utils";
-import { BaseOrderRequest, LimitOrderRequest, MarketOrderRequest } from "..";
-export interface OANDAOrderSettings extends BaseOrderSettings {
-}
-export declare class OANDAOrderClass extends BaseOrderClass {
-    constructor(params: OANDAOrderSettings);
-    get instrument(): string;
-    get units(): number;
-    get limitOrderRequest(): LimitOrderRequest;
-    get marketOrderRequest(): MarketOrderRequest;
-    get request(): BaseOrderRequest;
-}
+import { OrderSide } from "trade-utils";
+import { LimitOrderRequest } from "./rest/requestType";
+import { Instrument } from "./rest/responseType";
+export declare function CreateLimitOrder(instrument: Instrument, side: OrderSide, units: number, price: number): LimitOrderRequest;
+export declare function CreateTakerProfitOrder(instrument: Instrument, side: OrderSide, units: number, price: number, takeProfitRate: number): LimitOrderRequest;

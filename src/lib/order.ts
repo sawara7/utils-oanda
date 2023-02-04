@@ -1,58 +1,23 @@
-import {
-    BaseOrderSettings,
-    BaseOrderClass
-} from "trade-utils"
+import { OrderSide } from "trade-utils"
+import { LimitOrderRequest } from "./rest/requestType"
+import { Instrument } from "./rest/responseType"
 
-import {
-    BaseOrderRequest,
-    InstrumentName,
-    LimitOrderRequest,
-    MarketOrderRequest
-} from ".."
-
-export interface OANDAOrderSettings extends BaseOrderSettings {
+export function CreateLimitOrder(instrument: Instrument, side: OrderSide, units: number, price: number): LimitOrderRequest {
+    return {
+        type: "LIMIT",
+        instrument: instrument.name,
+        units: units.toString(),
+        price: price.toString(),
+        positionFill: 'DEFAULT',
+        triggerCondition: 'DEFAULT'
+    }
 }
 
-export class OANDAOrderClass extends BaseOrderClass {
-    constructor (params: OANDAOrderSettings) {
-        super(params)
+export function CreateTakerProfitOrder(instrument: Instrument, side: OrderSide, units: number, price: number, takeProfitRate: number): LimitOrderRequest {
+    const res = CreateLimitOrder(instrument, side, units, price)
+    res.takeProfitOnFill = {
+        price:(Math.round((price * (side === "buy"? 1.002: 0.998)) * (1 / 0.001)) / (1 / 0.001)).toString(),
+        timeInForce: 'GTC'
     }
-
-    get instrument(): InstrumentName {
-        return this.market.name
-    }
-
-    get units(): number {
-        return Math.abs(this.roundSize(this.size)) * (this.side === 'buy'? 1: -1)
-    }
-
-    get limitOrderRequest(): LimitOrderRequest {
-        return {
-            type: 'LIMIT',
-            instrument: this.instrument,
-            units: this.units,
-            positionFill : 'DEFAULT',
-            price: this.price.toString(),
-            triggerCondition: 'DEFAULT'
-        }
-    }
-
-    get marketOrderRequest(): MarketOrderRequest {
-        return {
-            type: 'MARKET',
-            instrument: this.instrument,
-            units: this.units,
-            positionFill : 'DEFAULT'
-        }
-    }
-
-    get request(): BaseOrderRequest {
-        if (this.type === 'limit') {
-            return this.limitOrderRequest
-        }
-        if (this.type === 'market') {
-            return this.marketOrderRequest
-        }
-        throw new Error('failed order create.')
-    }
+    return res
 }

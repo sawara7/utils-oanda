@@ -6,6 +6,51 @@ export interface InstrumentsResponse {
   lastTransactionID: number
 }
 
+export interface InstrumentCommission {
+  commission: DecimalNumber,
+  unitsTraded: DecimalNumber,
+  minimumCommission: DecimalNumber
+}
+
+export const DayOfWeeks = [
+  "SUNDAY",
+  "MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+  "SATURDAY"
+] as const
+export type DayOfWeek = typeof DayOfWeeks[number];
+
+export interface FinancingDayOfWeek {
+  dayOfWeek: DayOfWeek,
+  daysCharged: number
+}
+
+export interface InstrumentCommission {
+  longRate: DecimalNumber,
+  shortRate: DecimalNumber,
+  financingDaysOfWeek: FinancingDayOfWeek[]
+}
+
+export interface Tag {
+  type: string,
+  name: string
+}
+
+export interface GuaranteedStopLossOrderLevelRestriction {
+  volume: DecimalNumber,
+  priceRange: DecimalNumber
+}
+
+export const guaranteedStopLossOrderModeForInstruments = [
+  "DISABLED",
+  "ALLOWED",
+  "REQUIRED"
+] as const
+export type guaranteedStopLossOrderModeForInstrument = typeof guaranteedStopLossOrderModeForInstruments[number];
+
 export interface Instrument {
   name: InstrumentName,
   type: InstrumentType,
@@ -13,19 +58,19 @@ export interface Instrument {
   pipLocation: number,
   displayPrecision: number,
   tradeUnitsPrecision: number,
-  minimumTradeSize: number,
-  maximumTrailingStopDistance: number,
-  minimumGuaranteedStopLossDistance: number,
-  minimumTrailingStopDistance: number,
-  maximumPositionSize: number,
-  maximumOrderUnits : number,
-  marginRate: number,
-  commission: string,
-  guaranteedStopLossOrderMode: string,
-  guaranteedStopLossOrderExecutionPremium: number,
-  // guaranteedStopLossOrderLevelRestriction : (GuaranteedStopLossOrderLevelRestriction),
-  // financing : (InstrumentFinancing),
-  // tags : (Array[Tag]
+  minimumTradeSize: DecimalNumber,
+  maximumTrailingStopDistance: DecimalNumber,
+  minimumGuaranteedStopLossDistance: DecimalNumber,
+  minimumTrailingStopDistance: DecimalNumber,
+  maximumPositionSize: DecimalNumber,
+  maximumOrderUnits : DecimalNumber,
+  marginRate: DecimalNumber,
+  commission: InstrumentCommission,
+  guaranteedStopLossOrderMode: guaranteedStopLossOrderModeForInstrument,
+  guaranteedStopLossOrderExecutionPremium: DecimalNumber,
+  guaranteedStopLossOrderLevelRestriction : GuaranteedStopLossOrderLevelRestriction,
+  financing: InstrumentCommission,
+  tags: Tag[]
 }
 
 export interface oaOrderResponse {

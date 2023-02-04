@@ -1,7 +1,7 @@
 import { TradeState } from "./responseType";
 import { OrderType, OrderTriggerCondition, TransactionType, TimeInForce, InstrumentName, DecimalNumber, PriceValue, DateTime } from "./type";
-export declare type AcceptDateTimeFormat = 'UNIX' | 'RFC3339';
-export declare type OrderPositionFill = 'DEFAULT';
+export type AcceptDateTimeFormat = 'UNIX' | 'RFC3339';
+export type OrderPositionFill = 'DEFAULT';
 export interface GetTransactionsSinceIDRequest {
     id: string;
     type?: TransactionType;

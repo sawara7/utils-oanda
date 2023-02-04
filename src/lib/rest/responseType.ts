@@ -21,7 +21,7 @@ export const DayOfWeeks = [
   "FRIDAY",
   "SATURDAY"
 ] as const
-export type DayOfWeek = typeof DayOfWeeks[number];
+export type DayOfWeek = typeof DayOfWeeks[number]
 
 export interface FinancingDayOfWeek {
   dayOfWeek: DayOfWeek,
@@ -49,7 +49,7 @@ export const guaranteedStopLossOrderModeForInstruments = [
   "ALLOWED",
   "REQUIRED"
 ] as const
-export type guaranteedStopLossOrderModeForInstrument = typeof guaranteedStopLossOrderModeForInstruments[number];
+export type guaranteedStopLossOrderModeForInstrument = typeof guaranteedStopLossOrderModeForInstruments[number]
 
 export interface Instrument {
   name: InstrumentName,

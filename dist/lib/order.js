@@ -1,21 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateTakerProfitOrder = exports.CreateLimitOrder = void 0;
+const my_utils_1 = require("my-utils");
 function CreateLimitOrder(instrument, side, units, price) {
+    const p = (0, my_utils_1.floor)(price, instrument.displayPrecision);
+    const u = (0, my_utils_1.floor)(Math.abs(units), instrument.tradeUnitsPrecision) * (side === "sell" ? -1 : 1);
     return {
         type: "LIMIT",
         instrument: instrument.name,
-        units: units.toString(),
-        price: price.toString(),
+        units: u.toString(),
+        price: p.toString(),
         positionFill: 'DEFAULT',
         triggerCondition: 'DEFAULT'
     };
 }
 exports.CreateLimitOrder = CreateLimitOrder;
-function CreateTakerProfitOrder(instrument, side, units, price, takeProfitRate) {
-    const res = CreateLimitOrder(instrument, side, units, price);
+function CreateTakerProfitOrder(instrument, closeSide, units, price, takeProfitRate) {
+    const res = CreateLimitOrder(instrument, closeSide, units, price);
+    const closeRate = closeSide === "buy" ? 1 + takeProfitRate : 1 - takeProfitRate;
+    const closePrice = (0, my_utils_1.floor)(price * closeRate, instrument.tradeUnitsPrecision);
     res.takeProfitOnFill = {
-        price: (Math.round((price * (side === "buy" ? 1.002 : 0.998)) * (1 / 0.001)) / (1 / 0.001)).toString(),
+        price: closePrice.toString(),
         timeInForce: 'GTC'
     };
     return res;

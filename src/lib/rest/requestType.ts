@@ -1,5 +1,14 @@
-import { TradeState } from "./responseType";
-import { OrderType, OrderState, OrderTriggerCondition, TransactionType, TimeInForce, InstrumentName, DecimalNumber, PriceValue, DateTime } from "./type";
+import {
+  OrderType,
+  OrderTriggerCondition,
+  TransactionType,
+  TimeInForce,
+  InstrumentName,
+  DecimalNumber,
+  PriceValue,
+  DateTime,
+  TradeStateType
+} from "./type";
 
 // Ticker
 export type AcceptDateTimeFormat = 'UNIX' | 'RFC3339';
@@ -15,7 +24,7 @@ export interface GetTransactionsStreamRequest {
 }
 export interface GetTradeRequest {
   ids?: string, // query	List of TradeID (csv)
-  state?: TradeState,
+  state?: TradeStateType,
   instrument?: InstrumentName,
   count?: number, // [default=50, maximum=500]
   beforeID?: string,

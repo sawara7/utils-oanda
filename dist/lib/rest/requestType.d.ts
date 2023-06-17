@@ -1,5 +1,4 @@
-import { TradeState } from "./responseType";
-import { OrderType, OrderTriggerCondition, TransactionType, TimeInForce, InstrumentName, DecimalNumber, PriceValue, DateTime } from "./type";
+import { OrderType, OrderTriggerCondition, TransactionType, TimeInForce, InstrumentName, DecimalNumber, PriceValue, DateTime, TradeStateType } from "./type";
 export type AcceptDateTimeFormat = 'UNIX' | 'RFC3339';
 export type OrderPositionFill = 'DEFAULT';
 export interface GetTransactionsSinceIDRequest {
@@ -10,7 +9,7 @@ export interface GetTransactionsStreamRequest {
 }
 export interface GetTradeRequest {
     ids?: string;
-    state?: TradeState;
+    state?: TradeStateType;
     instrument?: InstrumentName;
     count?: number;
     beforeID?: string;

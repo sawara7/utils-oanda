@@ -11,6 +11,13 @@ export type DecimalNumber = string
 export type TransactionType = typeof TransactionTypes[number]
 export type OrderFillReason = string
 
+export const TradeStateTypes = [
+  'OPEN',
+  'CLOSED',
+  'CLOSE_WHEN_TRADEABLE'
+] as const
+export type TradeStateType = typeof InstrumentTypes[number]
+
 export const InstrumentNames = [
   'AUD_CHF',
   'CAD_SGD',
@@ -84,14 +91,14 @@ export const InstrumentNames = [
   'EUR_JPY',
   'EUR_GBP'
 ] as const;
-export type InstrumentName = typeof InstrumentNames[number];
+export type InstrumentName = typeof InstrumentNames[number]
 
 export const InstrumentTypes = [
   'CURRENCY', //Currency
   'CFD',	//Contract For Difference
   'METAL', //Metal
 ] as const;
-export type InstrumentType = typeof InstrumentTypes[number];
+export type InstrumentType = typeof InstrumentTypes[number]
 
 export interface ApiConfig {
   endPoint?: string;
@@ -112,7 +119,7 @@ export const TimeInForces = [
   "FOK",	//The Order must be immediately “Filled Or Killed”
   "IOC"	//The Order must be “Immediately partially filled Or Cancelled”
 ]
-export type TimeInForce = typeof TimeInForces[number];
+export type TimeInForce = typeof TimeInForces[number]
 
 export const OrderTypes = [
   "MARKET",	//A Market Order
@@ -125,7 +132,7 @@ export const OrderTypes = [
   "TRAILING_STOP_LOSS",	//A Trailing Stop Loss Order
   "FIXED_PRICE"	//A Fixed Price Order
 ] as const;
-export type OrderType = typeof OrderTypes[number];
+export type OrderType = typeof OrderTypes[number]
 
 export const orderTriggerConditions = [
   "DEFAULT",	//Trigger an Order the “natural” way: compare its price to the ask for long Orders and bid for short Orders.
@@ -134,7 +141,7 @@ export const orderTriggerConditions = [
   "ASK",	//Trigger an Order by comparing its price to the ask regardless of whether it is long or short.
   "MID"	//Trigger an Order by comparing its price to the midpoint regardless of whether it is long or short.
 ] as const;
-export type OrderTriggerCondition = typeof orderTriggerConditions[number];
+export type OrderTriggerCondition = typeof orderTriggerConditions[number]
 
 export const OrderStates = [
   "PENDING",
@@ -142,7 +149,7 @@ export const OrderStates = [
   "TRIGGERED",
   "CANCELLED"
 ] as const;
-export type OrderState = typeof OrderStates[number];
+export type OrderState = typeof OrderStates[number]
 
 export const TransactionTypes = [
   'ORDER',	//Order-related Transactions. These are the Transactions that create, // 'cancel, fill or trigger Orders
@@ -187,49 +194,4 @@ export const TransactionTypes = [
   // 'DELAYED_TRADE_CLOSURE	Delayed Trade Closure Transaction
   'DAILY_FINANCING',	//Daily Financing Transaction
   'RESET_RESETTAB'
-] as const;
-
-export interface wsTrade {
-  id: number;
-  time: string;
-  side: string;
-  size: number;
-  price: number;
-  liquidation: boolean;
-}
-
-export interface wsTicker {
-  time: string;
-  bid: number;
-  ask: number;
-  last: number;
-}
-
-export interface wsFill {
-  fee: number //78.05799225,
-  feeRate: number //0.0014,
-  future: string //BTC-PERP,
-  id: number //7828307,
-  liquidity: string //taker,
-  market: string //BTC-PERP,
-  orderId: number //38065410,
-  tradeId: number //19129310,
-  price: number //3723.75,
-  side: string //buy,
-  size: number //14.973,
-  time: string //2019-05-07T16:40:58.358438+00:00,
-  type: string //order
-}
-
-export interface wsOrder {
-  id: string //24852229,
-  market: string //XRP-PERP,
-  type: string //limit,
-  side: string //buy,
-  size: number //42353.0,
-  price: number //0.2977,
-  status: string //closed,
-  filledSize: number //0.0,
-  remainingSize: number //0.0,
-  avgFillPrice: number //0.2978
-}
+] as const

@@ -1,5 +1,5 @@
 import { ClientExtensions } from "./requestType";
-import { TransactionType, OrderFillReason, InstrumentName, OrderTriggerCondition, OrderID, DateTime, OrderState, TradeID, ClientID, PriceValue, OrderType, TransactionID, TimeInForce, DecimalNumber, InstrumentType } from "./type";
+import { TransactionType, OrderFillReason, InstrumentName, OrderTriggerCondition, OrderID, DateTime, OrderState, TradeID, ClientID, PriceValue, OrderType, TransactionID, TimeInForce, DecimalNumber, InstrumentType, TradeStateType } from "./type";
 
 export interface InstrumentsResponse {
   instruments: Instrument[],
@@ -164,7 +164,7 @@ export interface Trade {
   instrument: InstrumentName,
   price: string,
   openTime: string,
-  state: TradeState,
+  state: TradeStateType,
   initialUnits: string,
   initialMarginRequired: number,
   currentUnits: string,
@@ -181,8 +181,6 @@ export interface Trade {
   stopLossOrder? : StopLossOrder,
   trailingStopLossOrder? : TrailingStopLossOrder
 }
-
-export type TradeState = "OPEN" | "CLOSED" | "CLOSE_WHEN_TRADEABLE";
 
 export interface PricingResponse {
   prices: ClientPrice[];

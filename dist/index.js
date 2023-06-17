@@ -20,3 +20,4 @@ __exportStar(require("./lib/rest/responseType"), exports);
 __exportStar(require("./lib/rest/type"), exports);
 __exportStar(require("./lib/order"), exports);
 __exportStar(require("./lib/instrument"), exports);
+__exportStar(require("./lib/rest/utils"), exports);

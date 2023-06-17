@@ -1,8 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TransactionTypes = exports.OrderStates = exports.orderTriggerConditions = exports.OrderTypes = exports.TimeInForces = exports.InstrumentTypes = exports.InstrumentNames = exports.MAX_ORDER_SIZE = exports.MAX_POSITION_SIZE = void 0;
+exports.TransactionTypes = exports.OrderStates = exports.orderTriggerConditions = exports.OrderTypes = exports.TimeInForces = exports.InstrumentTypes = exports.InstrumentNames = exports.TradeStateTypes = exports.MAX_ORDER_SIZE = exports.MAX_POSITION_SIZE = void 0;
 exports.MAX_POSITION_SIZE = 1000;
 exports.MAX_ORDER_SIZE = 1000;
+exports.TradeStateTypes = [
+    'OPEN',
+    'CLOSED',
+    'CLOSE_WHEN_TRADEABLE'
+];
 exports.InstrumentNames = [
     'AUD_CHF',
     'CAD_SGD',

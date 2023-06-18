@@ -19,7 +19,7 @@ export function CreateLimitOrder(instrument: Instrument, side: OrderSide, units:
 export function CreateTakerProfitOrder(instrument: Instrument, closeSide: OrderSide, units: number, price: number, takeProfitRate: number): LimitOrderRequest {
     const res = CreateLimitOrder(instrument, closeSide, units, price)
     const closeRate = closeSide === "buy"? 1 + takeProfitRate: 1 - takeProfitRate
-    const closePrice = floor(price * closeRate, instrument.tradeUnitsPrecision)
+    const closePrice = floor(price * closeRate, instrument.displayPrecision)
     res.takeProfitOnFill = {
         price: closePrice.toString(),
         timeInForce: 'GTC'

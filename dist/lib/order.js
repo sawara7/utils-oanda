@@ -18,7 +18,7 @@ exports.CreateLimitOrder = CreateLimitOrder;
 function CreateTakerProfitOrder(instrument, closeSide, units, price, takeProfitRate) {
     const res = CreateLimitOrder(instrument, closeSide, units, price);
     const closeRate = closeSide === "buy" ? 1 + takeProfitRate : 1 - takeProfitRate;
-    const closePrice = (0, my_utils_1.floor)(price * closeRate, instrument.tradeUnitsPrecision);
+    const closePrice = (0, my_utils_1.floor)(price * closeRate, instrument.displayPrecision);
     res.takeProfitOnFill = {
         price: closePrice.toString(),
         timeInForce: 'GTC'

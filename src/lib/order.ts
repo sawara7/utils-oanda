@@ -33,8 +33,7 @@ export function CreateStopLossOrder(instrument: Instrument, closeSide: OrderSide
     const closePrice = floor(price * closeRate, instrument.displayPrecision)
     const distance = floor(Math.abs(closePrice - price) * 10*instrument.displayPrecision, 0)
     res.guaranteedStopLossOnFill = {
-        distance: distance,
-        timeInForce: 'GTC'
+        distance: 10,
     }
     return res
 }

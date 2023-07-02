@@ -32,8 +32,7 @@ function CreateStopLossOrder(instrument, closeSide, units, price, stopLossRate) 
     const closePrice = (0, my_utils_1.floor)(price * closeRate, instrument.displayPrecision);
     const distance = (0, my_utils_1.floor)(Math.abs(closePrice - price) * 10 * instrument.displayPrecision, 0);
     res.guaranteedStopLossOnFill = {
-        distance: distance,
-        timeInForce: 'GTC'
+        distance: 10,
     };
     return res;
 }

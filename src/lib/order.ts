@@ -26,3 +26,14 @@ export function CreateTakerProfitOrder(instrument: Instrument, closeSide: OrderS
     }
     return res
 }
+
+export function CreateStopLossOrder(instrument: Instrument, closeSide: OrderSide, units: number, price: number, stopLossRate: number): LimitOrderRequest {
+    const res = CreateLimitOrder(instrument, closeSide, units, price)
+    const closeRate = closeSide === "sell"? 1 + stopLossRate: 1 - stopLossRate
+    const closePrice = floor(price * closeRate, instrument.displayPrecision)
+    res.stopLossOnFill = {
+        price: closePrice.toString(),
+        timeInForce: 'GTC'
+    }
+    return res
+}

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateTakerProfitOrder = exports.CreateLimitOrder = void 0;
+exports.CreateStopLossOrder = exports.CreateTakerProfitOrder = exports.CreateLimitOrder = void 0;
 const my_utils_1 = require("my-utils");
 function CreateLimitOrder(instrument, side, units, price) {
     const p = (0, my_utils_1.floor)(price, instrument.displayPrecision);
@@ -26,3 +26,14 @@ function CreateTakerProfitOrder(instrument, closeSide, units, price, takeProfitR
     return res;
 }
 exports.CreateTakerProfitOrder = CreateTakerProfitOrder;
+function CreateStopLossOrder(instrument, closeSide, units, price, stopLossRate) {
+    const res = CreateLimitOrder(instrument, closeSide, units, price);
+    const closeRate = closeSide === "sell" ? 1 + stopLossRate : 1 - stopLossRate;
+    const closePrice = (0, my_utils_1.floor)(price * closeRate, instrument.displayPrecision);
+    res.stopLossOnFill = {
+        price: closePrice.toString(),
+        timeInForce: 'GTC'
+    };
+    return res;
+}
+exports.CreateStopLossOrder = CreateStopLossOrder;

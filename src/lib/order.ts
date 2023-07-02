@@ -32,7 +32,7 @@ export function CreateStopLossOrder(instrument: Instrument, closeSide: OrderSide
     const closeRate = closeSide === "sell"? 1 + stopLossRate: 1 - stopLossRate
     const closePrice = floor(price * closeRate, instrument.displayPrecision)
     const distance = floor(Math.abs(closePrice - price) * 10*instrument.displayPrecision, 0)
-    res.guaranteedStopLossOnFill = {
+    res.stopLossOnFill = {
         distance: 10,
     }
     return res

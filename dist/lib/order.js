@@ -30,7 +30,7 @@ function CreateStopLossOrder(instrument, closeSide, units, price, stopLossRate) 
     const res = CreateLimitOrder(instrument, closeSide, units, price);
     const closeRate = closeSide === "sell" ? 1 + stopLossRate : 1 - stopLossRate;
     const closePrice = (0, my_utils_1.floor)(price * closeRate, instrument.displayPrecision);
-    res.stopLossOnFill = {
+    res.guaranteedStopLossOnFill = {
         price: closePrice.toString(),
         timeInForce: 'GTC'
     };

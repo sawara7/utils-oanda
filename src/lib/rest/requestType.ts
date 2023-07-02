@@ -90,10 +90,10 @@ export interface StopLossDetails {
 }
 
 export interface GuaranteedStopLossDetails {
-  price: PriceValue,
-  timeInForce: TimeInForce,
+  price?: PriceValue,
+  timeInForce?: TimeInForce,
   gtdTime?: DateTime,
-  distance: number,
+  distance?: number,
 }
 
 export interface TrailingStopLossDetails {

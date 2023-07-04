@@ -10,7 +10,7 @@
   "scripts": {
     "install-rimraf": "npm install --save-dev rimraf",
     "cleanup": "rimraf package-lock.json && rimraf dist && rimraf node_modules",
-    "build": "npm run cleanup && npm install && tsc"
+    "build": "npm run install-rimraf && npm run cleanup && npm install && tsc"
   },
   "author": "sawara",
   "license": "MIT",

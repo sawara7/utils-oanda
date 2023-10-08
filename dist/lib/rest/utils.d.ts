@@ -1,2 +1,2 @@
-import { OrderSide } from "trade-utils";
+import { OrderSide } from "utils-trade";
 export declare function getOrderSideFromUnit(unit: number | string): OrderSide;

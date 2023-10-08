@@ -1,4 +1,4 @@
-import { OrderSide } from "trade-utils";
+import { OrderSide } from "utils-trade";
 import { LimitOrderRequest, MarketOrderRequest } from "./rest/requestType";
 import { Instrument } from "./rest/responseType";
 export declare function CreateLIMITOrder(instrument: Instrument, side: OrderSide, units: number, price: number): LimitOrderRequest;

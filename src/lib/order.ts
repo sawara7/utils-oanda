@@ -1,5 +1,5 @@
-import { OrderSide } from "trade-utils"
-import { floor } from "my-utils"
+import { OrderSide } from "utils-trade"
+import { floor } from "utils-general"
 import { LimitOrderRequest, MarketOrderRequest } from "./rest/requestType"
 import { Instrument } from "./rest/responseType"
 import { OrderType } from ".."

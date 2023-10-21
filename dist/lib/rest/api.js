@@ -112,6 +112,10 @@ class oaAPIClass extends base_1.baseApiClass {
         const path = this.getPath('pricing');
         return this.get(path, params);
     }
+    getCandles(instrument, params) {
+        const path = this.getPath('pricing/' + instrument + '/candles');
+        return this.get(path, params);
+    }
     //=================
     // INSTRUMENTS
     //=================

@@ -7,7 +7,8 @@ import {
   DecimalNumber,
   PriceValue,
   DateTime,
-  TradeStateType
+  TradeStateType,
+  CandlestickGranularity
 } from "./type";
 
 // Ticker
@@ -105,6 +106,20 @@ export interface TrailingStopLossDetails {
 export interface GetPricingRequest {
   instruments: InstrumentName;
   since?: number;
+}
+
+export interface GetCandlesRequest {
+  price?:	"M" | "B" | "A"; //The Price component(s) to get candlestick data for. [default=M]
+  granularity?: CandlestickGranularity;	//The granularity of the candlesticks to fetch [default=S5]
+  count?: number;	// The number of candlesticks to return in the response. Count should not be specified if both the start and end parameters are provided, as the time range combined with the granularity will determine the number of candlesticks to return. [default=500, maximum=5000]
+  from?: DateTime;	//	The start of the time range to fetch candlesticks for.
+  to?: DateTime;	//The end of the time range to fetch candlesticks for.
+  smooth?: boolean;	//A flag that controls whether the candlestick is “smoothed” or not. A smoothed candlestick uses the previous candle’s close price as its open price, while an unsmoothed candlestick uses the first price from its time range as its open price. [default=False]
+  includeFirst?: boolean	//A flag that controls whether the candlestick that is covered by the from time should be included in the results. This flag enables clients to use the timestamp of the last completed candlestick received to poll for future candlesticks but avoid receiving the previous candlestick repeatedly. [default=True]
+  dailyAlignment?: number //The hour of the day (in the specified timezone) to use for granularities that have daily alignments. [default=17, minimum=0, maximum=23]
+  alignmentTimezone?: string	//The timezone to use for the dailyAlignment parameter. Candlesticks with daily alignment will be aligned to the dailyAlignment hour within the alignmentTimezone. Note that the returned times will still be represented in UTC. [default=America/New_York]
+  weeklyAlignment?: string	//The day of the week used for granularities that have weekly alignment. [default=Friday]
+  units?: number; //The number of units used to calculate the volume-weighted average bid and ask prices in the returned candles. [default=1]
 }
 
 export interface PutTradeOrdersRequest {

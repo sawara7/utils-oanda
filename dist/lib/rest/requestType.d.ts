@@ -1,4 +1,4 @@
-import { OrderType, OrderTriggerCondition, TransactionType, TimeInForce, InstrumentName, DecimalNumber, PriceValue, DateTime, TradeStateType } from "./type";
+import { OrderType, OrderTriggerCondition, TransactionType, TimeInForce, InstrumentName, DecimalNumber, PriceValue, DateTime, TradeStateType, CandlestickGranularity } from "./type";
 export type AcceptDateTimeFormat = 'UNIX' | 'RFC3339';
 export type OrderPositionFill = 'DEFAULT';
 export interface GetTransactionsSinceIDRequest {
@@ -86,6 +86,19 @@ export interface TrailingStopLossDetails {
 export interface GetPricingRequest {
     instruments: InstrumentName;
     since?: number;
+}
+export interface GetCandlesRequest {
+    price?: "M" | "B" | "A";
+    granularity?: CandlestickGranularity;
+    count?: number;
+    from?: DateTime;
+    to?: DateTime;
+    smooth?: boolean;
+    includeFirst?: boolean;
+    dailyAlignment?: number;
+    alignmentTimezone?: string;
+    weeklyAlignment?: string;
+    units?: number;
 }
 export interface PutTradeOrdersRequest {
     takeProfit?: TakeProfitDetails;

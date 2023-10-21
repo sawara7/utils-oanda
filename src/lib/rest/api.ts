@@ -12,7 +12,8 @@ import {
   SingleInstrumentPositionResponse,
   AccountSummary,
   AccountSummaryResponse,
-  PutTradeOrdersResponse
+  PutTradeOrdersResponse,
+  CandlesResponse
 } from './responseType';
 import {
   GetPricingRequest,
@@ -21,7 +22,8 @@ import {
   GetTransactionsSinceIDRequest,
   BaseOrderRequest,
   GetOrderRequest,
-  PutTradeOrdersRequest
+  PutTradeOrdersRequest,
+  GetCandlesRequest
 } from './requestType';
 import { OANDAApiConfig, InstrumentName } from './type';
 import { sleep } from 'my-utils';
@@ -118,6 +120,11 @@ export class oaAPIClass extends baseApiClass {
   //=================
   public getPricing(params: GetPricingRequest): Promise<PricingResponse> {
     const path = this.getPath('pricing');
+    return this.get(path, params);
+  }
+
+  public getCandles(instrument: InstrumentName, params: GetCandlesRequest): Promise<CandlesResponse> {
+    const path = this.getPath('pricing/' + instrument + '/candles');
     return this.get(path, params);
   }
 

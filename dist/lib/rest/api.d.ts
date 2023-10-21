@@ -1,6 +1,6 @@
 import { baseApiClass, ApiOptions } from './base';
-import { PricingResponse, oaOrderResponse, InstrumentsResponse, GetTradeResponse, GetTransactionsSinceIDResponse, PendingOrderResponse, oaCancelOrderResponse, OrderResponse, SingleInstrumentPositionResponse, AccountSummaryResponse, PutTradeOrdersResponse } from './responseType';
-import { GetPricingRequest, GetTradeRequest, GetTransactionsSinceIDRequest, BaseOrderRequest, GetOrderRequest, PutTradeOrdersRequest } from './requestType';
+import { PricingResponse, oaOrderResponse, InstrumentsResponse, GetTradeResponse, GetTransactionsSinceIDResponse, PendingOrderResponse, oaCancelOrderResponse, OrderResponse, SingleInstrumentPositionResponse, AccountSummaryResponse, PutTradeOrdersResponse, CandlesResponse } from './responseType';
+import { GetPricingRequest, GetTradeRequest, GetTransactionsSinceIDRequest, BaseOrderRequest, GetOrderRequest, PutTradeOrdersRequest, GetCandlesRequest } from './requestType';
 import { OANDAApiConfig, InstrumentName } from './type';
 export declare class oaAPIClass extends baseApiClass {
     private readonly apiToken;
@@ -19,6 +19,7 @@ export declare class oaAPIClass extends baseApiClass {
     getOpenTrade(): Promise<GetTradeResponse>;
     putTradeOrders(tradeID: string, request: PutTradeOrdersRequest): Promise<PutTradeOrdersResponse>;
     getPricing(params: GetPricingRequest): Promise<PricingResponse>;
+    getCandles(instrument: InstrumentName, params: GetCandlesRequest): Promise<CandlesResponse>;
     getInstruments(): Promise<InstrumentsResponse>;
     getSingleInstrumentPosition(instrument: InstrumentName): Promise<SingleInstrumentPositionResponse>;
     getAccountSummary(): Promise<AccountSummaryResponse>;

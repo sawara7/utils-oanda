@@ -1,5 +1,5 @@
 import { ClientExtensions } from "./requestType";
-import { TransactionType, OrderFillReason, InstrumentName, OrderTriggerCondition, OrderID, DateTime, OrderState, TradeID, ClientID, PriceValue, OrderType, TransactionID, TimeInForce, DecimalNumber, InstrumentType, TradeStateType } from "./type";
+import { TransactionType, OrderFillReason, InstrumentName, OrderTriggerCondition, OrderID, DateTime, OrderState, TradeID, ClientID, PriceValue, OrderType, TransactionID, TimeInForce, DecimalNumber, InstrumentType, TradeStateType, CandlestickGranularity } from "./type";
 export interface InstrumentsResponse {
     instruments: Instrument[];
     lastTransactionID: number;
@@ -305,4 +305,23 @@ export interface TrailingStopLossOrder {
     gtdTime: DateTime;
     triggerCondition: OrderTriggerCondition;
     clientExtensions: ClientExtensions;
+}
+export interface CandlesResponse {
+    instrument: InstrumentName;
+    granularity: CandlestickGranularity;
+    candles: CandleStick[];
+}
+export interface CandlestickData {
+    o: PriceValue;
+    h: PriceValue;
+    l: PriceValue;
+    c: PriceValue;
+}
+export interface CandleStick {
+    time: DateTime;
+    bid: CandlestickData;
+    ask: CandlestickData;
+    mid: CandlestickData;
+    volume: number;
+    complete: boolean;
 }

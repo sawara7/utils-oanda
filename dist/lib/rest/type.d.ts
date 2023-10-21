@@ -33,4 +33,6 @@ export declare const orderTriggerConditions: readonly ["DEFAULT", "INVERSE", "BI
 export type OrderTriggerCondition = typeof orderTriggerConditions[number];
 export declare const OrderStates: readonly ["PENDING", "FILLED", "TRIGGERED", "CANCELLED"];
 export type OrderState = typeof OrderStates[number];
+export declare const CandlestickGranularities: readonly ["S5", "S10", "S15", "S30", "M1", "M2", "M4", "M5", "M10", "M15", "M30", "H1", "H2", "H3", "H4", "H6", "H8", "H12", "D", "W", "M"];
+export type CandlestickGranularity = typeof CandlestickGranularities[number];
 export declare const TransactionTypes: readonly ["ORDER", "FUNDING", "ADMIN", "CREATE", "CLOSE", "REOPEN", "ORDER_FILL", "DAILY_FINANCING", "RESET_RESETTAB"];

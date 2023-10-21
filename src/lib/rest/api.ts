@@ -124,7 +124,7 @@ export class oaAPIClass extends baseApiClass {
   }
 
   public getCandles(instrument: InstrumentName, params: GetCandlesRequest): Promise<CandlesResponse> {
-    const path = this.getPath('pricing/' + instrument + '/candles');
+    const path = this.getPath('instruments/' + instrument + '/candles');
     return this.get(path, params);
   }
 

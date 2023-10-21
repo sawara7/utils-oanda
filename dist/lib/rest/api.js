@@ -113,7 +113,7 @@ class oaAPIClass extends base_1.baseApiClass {
         return this.get(path, params);
     }
     getCandles(instrument, params) {
-        const path = this.getPath('pricing/' + instrument + '/candles');
+        const path = this.getPath('instruments/' + instrument + '/candles');
         return this.get(path, params);
     }
     //=================

@@ -220,3 +220,4 @@ export const TransactionTypes = [
   'DAILY_FINANCING',	//Daily Financing Transaction
   'RESET_RESETTAB'
 ] as const
+

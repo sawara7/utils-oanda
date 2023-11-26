@@ -13,7 +13,8 @@ import {
   AccountSummary,
   AccountSummaryResponse,
   PutTradeOrdersResponse,
-  CandlesResponse
+  CandlesResponse,
+  ClosePositionsResponse
 } from './responseType';
 import {
   GetPricingRequest,
@@ -113,6 +114,14 @@ export class oaAPIClass extends baseApiClass {
   public putTradeOrders(tradeID: string, request: PutTradeOrdersRequest): Promise<PutTradeOrdersResponse> {
     const path = this.getPath('trades/' + tradeID + '/orders');
     return this.put(path, request)
+  }
+
+  //=================
+  // POSITIONS
+  //=================
+  public closePositions(instrument: InstrumentName): Promise<ClosePositionsResponse> {
+    const path = this.getPath('positions/' + instrument + '/close');
+    return this.put(path, {})
   }
 
   //=================

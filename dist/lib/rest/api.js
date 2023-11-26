@@ -106,6 +106,13 @@ class oaAPIClass extends base_1.baseApiClass {
         return this.put(path, request);
     }
     //=================
+    // POSITIONS
+    //=================
+    closePositions(instrument) {
+        const path = this.getPath('positions/' + instrument + '/close');
+        return this.put(path, {});
+    }
+    //=================
     // PRICING
     //=================
     getPricing(params) {

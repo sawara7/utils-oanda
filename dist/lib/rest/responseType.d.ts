@@ -325,3 +325,9 @@ export interface CandleStick {
     volume: number;
     complete: boolean;
 }
+export interface ClosePositionsResponse {
+    longUnits: string;
+    longClientExtensions: ClientExtensions;
+    shortUnits: string;
+    shortClientExtensions: ClientExtensions;
+}

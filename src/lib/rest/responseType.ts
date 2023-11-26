@@ -480,3 +480,10 @@ export interface CandleStick {
   // A flag indicating if the candlestick is complete. A complete candlestick is one whose ending time is not in the future.
   complete : boolean;
 }
+
+export interface ClosePositionsResponse {
+  longUnits: string
+  longClientExtensions: ClientExtensions
+  shortUnits: string
+  shortClientExtensions: ClientExtensions
+}

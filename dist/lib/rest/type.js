@@ -82,33 +82,33 @@ exports.InstrumentNames = [
     'EUR_GBP'
 ];
 exports.InstrumentTypes = [
-    'CURRENCY',
-    'CFD',
+    'CURRENCY', //Currency
+    'CFD', //Contract For Difference
     'METAL', //Metal
 ];
 exports.TimeInForces = [
-    "GTC",
-    "GTD",
-    "GFD",
-    "FOK",
+    "GTC", //The Order is “Good unTil Cancelled”
+    "GTD", //The Order is “Good unTil Date” and will be cancelled at the provided time
+    "GFD", //The Order is “Good For Day” and will be cancelled at 5pm New York time
+    "FOK", //The Order must be immediately “Filled Or Killed”
     "IOC" //The Order must be “Immediately partially filled Or Cancelled”
 ];
 exports.OrderTypes = [
-    "MARKET",
-    "LIMIT",
-    "STOP",
-    "MARKET_IF_TOUCHED",
-    "TAKE_PROFIT",
-    "STOP_LOSS",
-    "GUARANTEED_STOP_LOSS",
-    "TRAILING_STOP_LOSS",
+    "MARKET", //A Market Order
+    "LIMIT", //A Limit Order
+    "STOP", //A Stop Order
+    "MARKET_IF_TOUCHED", //A Market-if-touched Order
+    "TAKE_PROFIT", //A Take Profit Order
+    "STOP_LOSS", //A Stop Loss Order
+    "GUARANTEED_STOP_LOSS", //A Guaranteed Stop Loss Order
+    "TRAILING_STOP_LOSS", //A Trailing Stop Loss Order
     "FIXED_PRICE" //A Fixed Price Order
 ];
 exports.orderTriggerConditions = [
-    "DEFAULT",
-    "INVERSE",
-    "BID",
-    "ASK",
+    "DEFAULT", //Trigger an Order the “natural” way: compare its price to the ask for long Orders and bid for short Orders.
+    "INVERSE", //Trigger an Order the opposite of the “natural” way: compare its price the bid for long Orders and ask for short Orders.
+    "BID", //Trigger an Order by comparing its price to the bid regardless of whether it is long or short.
+    "ASK", //Trigger an Order by comparing its price to the ask regardless of whether it is long or short.
     "MID" //Trigger an Order by comparing its price to the midpoint regardless of whether it is long or short.
 ];
 exports.OrderStates = [
@@ -118,35 +118,35 @@ exports.OrderStates = [
     "CANCELLED"
 ];
 exports.CandlestickGranularities = [
-    "S5",
-    "S10",
-    "S15",
-    "S30",
-    "M1",
-    "M2",
-    "M4",
-    "M5",
-    "M10",
-    "M15",
-    "M30",
-    "H1",
-    "H2",
-    "H3",
-    "H4",
-    "H6",
-    "H8",
-    "H12",
-    "D",
-    "W",
+    "S5", //	5 second candlesticks, minute alignment
+    "S10", //	10 second candlesticks, minute alignment
+    "S15", //	15 second candlesticks, minute alignment
+    "S30", //	30 second candlesticks, minute alignment
+    "M1", //	1 minute candlesticks, minute alignment
+    "M2", //	2 minute candlesticks, hour alignment
+    "M4", //	4 minute candlesticks, hour alignment
+    "M5", //	5 minute candlesticks, hour alignment
+    "M10", //	10 minute candlesticks, hour alignment
+    "M15", //	15 minute candlesticks, hour alignment
+    "M30", //	30 minute candlesticks, hour alignment
+    "H1", //	1 hour candlesticks, hour alignment
+    "H2", //	2 hour candlesticks, day alignment
+    "H3", //	3 hour candlesticks, day alignment
+    "H4", //	4 hour candlesticks, day alignment
+    "H6", //	6 hour candlesticks, day alignment
+    "H8", //	8 hour candlesticks, day alignment
+    "H12", //	12 hour candlesticks, day alignment
+    "D", //	1 day candlesticks, day alignment
+    "W", //	1 week candlesticks, aligned to start of week
     "M" //	1 month candlesticks, aligned to first day of the month
 ];
 exports.TransactionTypes = [
-    'ORDER',
-    'FUNDING',
-    'ADMIN',
-    'CREATE',
-    'CLOSE',
-    'REOPEN',
+    'ORDER', //Order-related Transactions. These are the Transactions that create, // 'cancel, fill or trigger Orders
+    'FUNDING', //Funding-related Transactions
+    'ADMIN', //Administrative Transactions
+    'CREATE', //Account Create Transaction
+    'CLOSE', //Account Close Transaction
+    'REOPEN', //Account Reopen Transaction
     // 'CLIENT_CONFIGURE	Client Configuration Transaction
     // 'CLIENT_CONFIGURE_REJECT	Client Configuration Reject Transaction
     // 'TRANSFER_FUNDS	Transfer Funds Transaction
@@ -170,7 +170,7 @@ exports.TransactionTypes = [
     // 'ONE_CANCELS_ALL_ORDER	One Cancels All Order Transaction
     // 'ONE_CANCELS_ALL_ORDER_REJECT	One Cancels All Order Reject Transaction
     // 'ONE_CANCELS_ALL_ORDER_TRIGGERED	One Cancels All Order Trigger Transaction
-    'ORDER_FILL',
+    'ORDER_FILL', //Order Fill Transaction
     // 'ORDER_CANCEL	Order Cancel Transaction
     // 'ORDER_CANCEL_REJECT	Order Cancel Reject Transaction
     // 'ORDER_CLIENT_EXTENSIONS_MODIFY	Order Client Extensions Modify Transaction
@@ -181,6 +181,6 @@ exports.TransactionTypes = [
     // 'MARGIN_CALL_EXTEND	Margin Call Extend Transaction
     // 'MARGIN_CALL_EXIT	Margin Call Exit Transaction
     // 'DELAYED_TRADE_CLOSURE	Delayed Trade Closure Transaction
-    'DAILY_FINANCING',
+    'DAILY_FINANCING', //Daily Financing Transaction
     'RESET_RESETTAB'
 ];

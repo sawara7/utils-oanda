@@ -482,8 +482,12 @@ export interface CandleStick {
 }
 
 export interface ClosePositionsResponse {
-  longUnits: string
-  longClientExtensions: ClientExtensions
-  shortUnits: string
-  shortClientExtensions: ClientExtensions
+  // longOrderCreateTransaction: MarketOrderTransaction
+  longOrderFillTransaction: OrderFillTransaction
+  longOrderCancelTransaction: OrderCancelTransaction
+  // shortOrderCreateTransaction: MarketOrderTransaction
+  shortOrderFillTransaction: OrderFillTransaction
+  shortOrderCancelTransaction: OrderCancelTransaction
+  relatedTransactionIDs: TransactionID[]
+  lastTransactionID: TransactionID
 }

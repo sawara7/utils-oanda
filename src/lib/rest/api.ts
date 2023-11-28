@@ -24,7 +24,8 @@ import {
   BaseOrderRequest,
   GetOrderRequest,
   PutTradeOrdersRequest,
-  GetCandlesRequest
+  GetCandlesRequest,
+  ClosePositionsRequest
 } from './requestType';
 import { OANDAApiConfig, InstrumentName } from './type';
 import { sleep } from 'my-utils';
@@ -119,9 +120,9 @@ export class oaAPIClass extends baseApiClass {
   //=================
   // POSITIONS
   //=================
-  public closePositions(instrument: InstrumentName): Promise<ClosePositionsResponse> {
+  public closePositions(instrument: InstrumentName, request: ClosePositionsRequest): Promise<ClosePositionsResponse> {
     const path = this.getPath('positions/' + instrument + '/close');
-    return this.put(path, {})
+    return this.put(path, request)
   }
 
   //=================

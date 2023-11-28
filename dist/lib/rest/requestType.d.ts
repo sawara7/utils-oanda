@@ -106,3 +106,9 @@ export interface PutTradeOrdersRequest {
     trailingStopLoss?: TrailingStopLossDetails;
     guaranteedStopLoss?: GuaranteedStopLossDetails;
 }
+export interface ClosePositionsRequest {
+    longUnits: string;
+    longClientExtensions: ClientExtensions;
+    shortUnits: string;
+    shortClientExtensions: ClientExtensions;
+}

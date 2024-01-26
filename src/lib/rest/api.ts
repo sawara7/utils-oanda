@@ -28,7 +28,7 @@ import {
   ClosePositionsRequest
 } from './requestType';
 import { OANDAApiConfig, InstrumentName } from './type';
-import { sleep } from 'my-utils';
+import { sleep } from 'utils-general';
 
 const URL_API_OANDA = 'https://api-fxtrade.oanda.com';
 const URL_STREAM_OANDA = 'https://stream-fxtrade.oanda.com';

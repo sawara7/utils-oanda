@@ -35,7 +35,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.oaAPIClass = void 0;
 const querystring = __importStar(require("querystring"));
 const base_1 = require("./base");
-const my_utils_1 = require("my-utils");
+const utils_general_1 = require("utils-general");
 const URL_API_OANDA = 'https://api-fxtrade.oanda.com';
 const URL_STREAM_OANDA = 'https://stream-fxtrade.oanda.com';
 class oaAPIClass extends base_1.baseApiClass {
@@ -180,7 +180,7 @@ class oaAPIClass extends base_1.baseApiClass {
                 if (interval > 0) {
                     if (interval < this._minOrderInterval) {
                         oaAPIClass._lastOrderTime[market] += this._minOrderInterval;
-                        yield (0, my_utils_1.sleep)(this._minOrderInterval - interval);
+                        yield (0, utils_general_1.sleep)(this._minOrderInterval - interval);
                     }
                     else if (interval > this._minOrderInterval) {
                         oaAPIClass._lastOrderTime[market] = Date.now();
@@ -188,7 +188,7 @@ class oaAPIClass extends base_1.baseApiClass {
                 }
                 else if (interval < 0) {
                     oaAPIClass._lastOrderTime[market] += this._minOrderInterval;
-                    yield (0, my_utils_1.sleep)(oaAPIClass._lastOrderTime[market] - Date.now());
+                    yield (0, utils_general_1.sleep)(oaAPIClass._lastOrderTime[market] - Date.now());
                 }
             }
             else {

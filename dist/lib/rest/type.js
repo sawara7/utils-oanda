@@ -6,7 +6,8 @@ exports.MAX_ORDER_SIZE = 1000;
 exports.TradeStateTypes = [
     'OPEN',
     'CLOSED',
-    'CLOSE_WHEN_TRADEABLE'
+    'CLOSE_WHEN_TRADEABLE',
+    'ALL'
 ];
 exports.InstrumentNames = [
     'AUD_CHF',

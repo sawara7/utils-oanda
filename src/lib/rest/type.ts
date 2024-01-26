@@ -14,9 +14,10 @@ export type OrderFillReason = string
 export const TradeStateTypes = [
   'OPEN',
   'CLOSED',
-  'CLOSE_WHEN_TRADEABLE'
+  'CLOSE_WHEN_TRADEABLE',
+  'ALL'
 ] as const
-export type TradeStateType = typeof InstrumentTypes[number]
+export type TradeStateType = typeof TradeStateTypes[number]
 
 export const InstrumentNames = [
   'AUD_CHF',

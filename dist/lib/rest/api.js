@@ -82,6 +82,10 @@ class oaAPIClass extends base_1.baseApiClass {
     //   const path = this.getPath('transactions');
     //   return this.get(path, request);
     // }
+    getTransactionByID(id) {
+        const path = this.getPath('transactions/' + id);
+        return this.get(path, {});
+    }
     getTransactionsSinceID(request) {
         const path = this.getPath('transactions/sinceid');
         return this.get(path, request);

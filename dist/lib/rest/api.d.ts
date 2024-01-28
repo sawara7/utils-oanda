@@ -1,5 +1,5 @@
 import { baseApiClass, ApiOptions } from './base';
-import { PricingResponse, oaOrderResponse, InstrumentsResponse, GetTradeResponse, GetTransactionsSinceIDResponse, PendingOrderResponse, oaCancelOrderResponse, OrderResponse, SingleInstrumentPositionResponse, AccountSummaryResponse, PutTradeOrdersResponse, CandlesResponse, ClosePositionsResponse } from './responseType';
+import { PricingResponse, oaOrderResponse, InstrumentsResponse, GetTradeResponse, GetTransactionsSinceIDResponse, PendingOrderResponse, oaCancelOrderResponse, OrderResponse, SingleInstrumentPositionResponse, AccountSummaryResponse, PutTradeOrdersResponse, CandlesResponse, ClosePositionsResponse, Transaction } from './responseType';
 import { GetPricingRequest, GetTradeRequest, GetTransactionsSinceIDRequest, BaseOrderRequest, GetOrderRequest, PutTradeOrdersRequest, GetCandlesRequest, ClosePositionsRequest } from './requestType';
 import { OANDAApiConfig, InstrumentName } from './type';
 export declare class oaAPIClass extends baseApiClass {
@@ -14,6 +14,7 @@ export declare class oaAPIClass extends baseApiClass {
     cancelOrder(orderID: string): Promise<oaCancelOrderResponse>;
     getOrders(request: GetOrderRequest): Promise<OrderResponse>;
     getPendingOrders(): Promise<PendingOrderResponse>;
+    getTransactionByID(id: string): Promise<Transaction>;
     getTransactionsSinceID(request: GetTransactionsSinceIDRequest): Promise<GetTransactionsSinceIDResponse>;
     getTrade(request: GetTradeRequest): Promise<GetTradeResponse>;
     getOpenTrade(): Promise<GetTradeResponse>;

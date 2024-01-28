@@ -113,6 +113,10 @@ export interface oaBasicOrder extends oaBaseOrder {
   state: string
 }
 
+export interface GetTransactionByIDResponse {
+  transactions: Transaction[],
+  lastTransactionID: string
+}
 export interface GetTransactionsSinceIDResponse {
   transactions: Transaction[],
   lastTransactionID: string

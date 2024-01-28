@@ -15,7 +15,8 @@ import {
   PutTradeOrdersResponse,
   CandlesResponse,
   ClosePositionsResponse,
-  Transaction
+  Transaction,
+  GetTransactionByIDResponse
 } from './responseType';
 import {
   GetPricingRequest,
@@ -90,7 +91,7 @@ export class oaAPIClass extends baseApiClass {
   //   return this.get(path, request);
   // }
 
-  public getTransactionByID(id: string): Promise<Transaction> {
+  public getTransactionByID(id: string): Promise<GetTransactionByIDResponse> {
     const path = this.getPath('transactions/' + id);
     return this.get(path, {});
   }

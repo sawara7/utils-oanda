@@ -144,7 +144,7 @@ export class oaAPIClass extends baseApiClass {
   // PRICING
   //=================
   public getPricing(params: GetPricingRequest): Promise<PricingResponse> {
-    const path = this.getPathPublic('pricing');
+    const path = this.getPathPrivate('pricing');
     return this.get(path, params);
   }
 

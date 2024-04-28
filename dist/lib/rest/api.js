@@ -123,7 +123,7 @@ class oaAPIClass extends base_1.baseApiClass {
     // PRICING
     //=================
     getPricing(params) {
-        const path = this.getPathPublic('pricing');
+        const path = this.getPathPrivate('pricing');
         return this.get(path, params);
     }
     getCandles(instrument, params) {

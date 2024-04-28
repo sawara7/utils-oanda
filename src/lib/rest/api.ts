@@ -62,7 +62,7 @@ export class oaAPIClass extends baseApiClass {
   }
 
   private getPathPublic(endPoint: string): string{
-    return '/v3/'.concat(this.accountID, '/', endPoint);
+    return '/v3/'.concat(endPoint);
   }
 
   //=================

@@ -54,7 +54,7 @@ class oaAPIClass extends base_1.baseApiClass {
         return '/v3/accounts/'.concat(this.accountID, '/', endPoint);
     }
     getPathPublic(endPoint) {
-        return '/v3/'.concat(this.accountID, '/', endPoint);
+        return '/v3/'.concat(endPoint);
     }
     //=================
     // ORDER 

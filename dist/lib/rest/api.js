@@ -148,6 +148,10 @@ class oaAPIClass extends base_1.baseApiClass {
         const path = this.getPath('summary');
         return this.get(path, {});
     }
+    getPositionBook(instrument, params) {
+        const path = this.getPath('instruments/' + instrument + '/positionBook');
+        return this.get(path, params);
+    }
     //=================
     // METHODS
     //=================

@@ -337,3 +337,18 @@ export interface ClosePositionsResponse {
     relatedTransactionIDs: TransactionID[];
     lastTransactionID: TransactionID;
 }
+export interface PositionBookBucket {
+    price: PriceValue;
+    longCountPercent: DecimalNumber;
+    shortCountPercent: DecimalNumber;
+}
+export interface PositionBook {
+    instrument: InstrumentName;
+    time: DateTime;
+    price: PriceValue;
+    bucketWidth: PriceValue;
+    buckets: PositionBookBucket[];
+}
+export interface PositionBookResponse {
+    positionBook: PositionBook;
+}

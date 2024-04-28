@@ -112,3 +112,6 @@ export interface ClosePositionsRequest {
     shortUnits: string;
     shortClientExtensions: ClientExtensions;
 }
+export interface GetPositionBookRequest {
+    time?: DateTime;
+}

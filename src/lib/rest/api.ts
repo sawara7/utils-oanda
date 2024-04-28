@@ -16,7 +16,8 @@ import {
   CandlesResponse,
   ClosePositionsResponse,
   Transaction,
-  GetTransactionByIDResponse
+  GetTransactionByIDResponse,
+  PositionBookResponse
 } from './responseType';
 import {
   GetPricingRequest,
@@ -27,9 +28,10 @@ import {
   GetOrderRequest,
   PutTradeOrdersRequest,
   GetCandlesRequest,
-  ClosePositionsRequest
+  ClosePositionsRequest,
+  GetPositionBookRequest
 } from './requestType';
-import { OANDAApiConfig, InstrumentName } from './type';
+import { OANDAApiConfig, InstrumentName, DateTime } from './type';
 import { sleep } from 'utils-general';
 
 const URL_API_OANDA = 'https://api-fxtrade.oanda.com';
@@ -167,6 +169,11 @@ export class oaAPIClass extends baseApiClass {
   public getAccountSummary(): Promise<AccountSummaryResponse> {
     const path = this.getPath('summary');
     return this.get(path, {});
+  }
+
+  public getPositionBook(instrument: InstrumentName, params: GetPositionBookRequest): Promise<PositionBookResponse> {
+    const path = this.getPath('instruments/' + instrument + '/positionBook')
+    return this.get(path, params)
   }
 
   //=================

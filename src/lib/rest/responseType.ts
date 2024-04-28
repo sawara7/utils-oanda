@@ -495,3 +495,20 @@ export interface ClosePositionsResponse {
   relatedTransactionIDs: TransactionID[]
   lastTransactionID: TransactionID
 }
+
+export interface PositionBookBucket{
+  price: PriceValue
+  longCountPercent: DecimalNumber
+  shortCountPercent: DecimalNumber
+}
+export interface PositionBook { 
+  instrument: InstrumentName //The position book’s instrument 
+  time: DateTime //# The time when the position book snapshot was created
+  price: PriceValue
+  bucketWidth: PriceValue
+  buckets: PositionBookBucket[]
+}
+
+export interface PositionBookResponse {
+  positionBook: PositionBook
+}

@@ -352,3 +352,18 @@ export interface PositionBook {
 export interface PositionBookResponse {
     positionBook: PositionBook;
 }
+export interface OrderBookBucket {
+    price: PriceValue;
+    longCountPercent: DecimalNumber;
+    shortCountPercent: DecimalNumber;
+}
+export interface OrderBook {
+    instrument: InstrumentName;
+    time: DateTime;
+    price: PriceValue;
+    bucketWidth: PriceValue;
+    buckets: OrderBookBucket[];
+}
+export interface OrderBookResponse {
+    orderBook: OrderBook;
+}

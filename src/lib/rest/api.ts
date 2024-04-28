@@ -17,7 +17,8 @@ import {
   ClosePositionsResponse,
   Transaction,
   GetTransactionByIDResponse,
-  PositionBookResponse
+  PositionBookResponse,
+  OrderBookResponse
 } from './responseType';
 import {
   GetPricingRequest,
@@ -29,7 +30,8 @@ import {
   PutTradeOrdersRequest,
   GetCandlesRequest,
   ClosePositionsRequest,
-  GetPositionBookRequest
+  GetPositionBookRequest,
+  GetOrderBookRequest
 } from './requestType';
 import { OANDAApiConfig, InstrumentName, DateTime } from './type';
 import { sleep } from 'utils-general';
@@ -153,6 +155,11 @@ export class oaAPIClass extends baseApiClass {
 
   public getPositionBook(instrument: InstrumentName, params: GetPositionBookRequest): Promise<PositionBookResponse> {
     const path = this.getPathPublic('instruments/' + instrument + '/positionBook')
+    return this.get(path, params)
+  }
+
+  public getOrderBook(instrument: InstrumentName, params: GetOrderBookRequest): Promise<OrderBookResponse> {
+    const path = this.getPathPublic('instruments/' + instrument + '/orderBook')
     return this.get(path, params)
   }
 

@@ -1,6 +1,6 @@
 import { baseApiClass, ApiOptions } from './base';
-import { PricingResponse, oaOrderResponse, InstrumentsResponse, GetTradeResponse, GetTransactionsSinceIDResponse, PendingOrderResponse, oaCancelOrderResponse, OrderResponse, SingleInstrumentPositionResponse, AccountSummaryResponse, PutTradeOrdersResponse, CandlesResponse, ClosePositionsResponse, GetTransactionByIDResponse, PositionBookResponse } from './responseType';
-import { GetPricingRequest, GetTradeRequest, GetTransactionsSinceIDRequest, BaseOrderRequest, GetOrderRequest, PutTradeOrdersRequest, GetCandlesRequest, ClosePositionsRequest, GetPositionBookRequest } from './requestType';
+import { PricingResponse, oaOrderResponse, InstrumentsResponse, GetTradeResponse, GetTransactionsSinceIDResponse, PendingOrderResponse, oaCancelOrderResponse, OrderResponse, SingleInstrumentPositionResponse, AccountSummaryResponse, PutTradeOrdersResponse, CandlesResponse, ClosePositionsResponse, GetTransactionByIDResponse, PositionBookResponse, OrderBookResponse } from './responseType';
+import { GetPricingRequest, GetTradeRequest, GetTransactionsSinceIDRequest, BaseOrderRequest, GetOrderRequest, PutTradeOrdersRequest, GetCandlesRequest, ClosePositionsRequest, GetPositionBookRequest, GetOrderBookRequest } from './requestType';
 import { OANDAApiConfig, InstrumentName } from './type';
 export declare class oaAPIClass extends baseApiClass {
     private readonly apiToken;
@@ -24,6 +24,7 @@ export declare class oaAPIClass extends baseApiClass {
     getPricing(params: GetPricingRequest): Promise<PricingResponse>;
     getCandles(instrument: InstrumentName, params: GetCandlesRequest): Promise<CandlesResponse>;
     getPositionBook(instrument: InstrumentName, params: GetPositionBookRequest): Promise<PositionBookResponse>;
+    getOrderBook(instrument: InstrumentName, params: GetOrderBookRequest): Promise<OrderBookResponse>;
     getInstruments(): Promise<InstrumentsResponse>;
     getSingleInstrumentPosition(instrument: InstrumentName): Promise<SingleInstrumentPositionResponse>;
     getAccountSummary(): Promise<AccountSummaryResponse>;

@@ -512,3 +512,20 @@ export interface PositionBook {
 export interface PositionBookResponse {
   positionBook: PositionBook
 }
+
+export interface OrderBookBucket{
+  price: PriceValue
+  longCountPercent: DecimalNumber
+  shortCountPercent: DecimalNumber
+}
+export interface OrderBook { 
+  instrument: InstrumentName //The position book’s instrument 
+  time: DateTime //# The time when the position book snapshot was created
+  price: PriceValue
+  bucketWidth: PriceValue
+  buckets: OrderBookBucket[]
+}
+
+export interface OrderBookResponse {
+  orderBook: OrderBook
+}

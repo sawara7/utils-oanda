@@ -115,3 +115,6 @@ export interface ClosePositionsRequest {
 export interface GetPositionBookRequest {
     time?: DateTime;
 }
+export interface GetOrderBookRequest {
+    time?: DateTime;
+}

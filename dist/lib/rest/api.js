@@ -50,29 +50,32 @@ class oaAPIClass extends base_1.baseApiClass {
             oaAPIClass._lastOrderTime = {};
         }
     }
-    getPath(endPoint) {
+    getPathPrivate(endPoint) {
         return '/v3/accounts/'.concat(this.accountID, '/', endPoint);
+    }
+    getPathPublic(endPoint) {
+        return '/v3/'.concat(this.accountID, '/', endPoint);
     }
     //=================
     // ORDER 
     //=================
     postOrder(request) {
         return __awaiter(this, void 0, void 0, function* () {
-            const path = this.getPath('orders');
+            const path = this.getPathPrivate('orders');
             yield this.sleepWhileOrderInterval(request.instrument);
             return this.post(path, { order: request });
         });
     }
     cancelOrder(orderID) {
-        const path = this.getPath('orders').concat('/', orderID, '/cancel');
+        const path = this.getPathPrivate('orders').concat('/', orderID, '/cancel');
         return this.put(path, {});
     }
     getOrders(request) {
-        const path = this.getPath('orders');
+        const path = this.getPathPrivate('orders');
         return this.get(path, request);
     }
     getPendingOrders() {
-        const path = this.getPath('pendingOrders');
+        const path = this.getPathPrivate('pendingOrders');
         return this.get(path, {});
     }
     //=================
@@ -83,11 +86,11 @@ class oaAPIClass extends base_1.baseApiClass {
     //   return this.get(path, request);
     // }
     getTransactionByID(id) {
-        const path = this.getPath('transactions/' + id);
+        const path = this.getPathPrivate('transactions/' + id);
         return this.get(path, {});
     }
     getTransactionsSinceID(request) {
-        const path = this.getPath('transactions/sinceid');
+        const path = this.getPathPrivate('transactions/sinceid');
         return this.get(path, request);
     }
     // public getTransactionsStream(): Promise<any> {
@@ -98,59 +101,59 @@ class oaAPIClass extends base_1.baseApiClass {
     // TRADES
     //=================
     getTrade(request) {
-        const path = this.getPath('trades');
+        const path = this.getPathPrivate('trades');
         return this.get(path, request);
     }
     getOpenTrade() {
-        const path = this.getPath('openTrades');
+        const path = this.getPathPrivate('openTrades');
         return this.get(path, {});
     }
     putTradeOrders(tradeID, request) {
-        const path = this.getPath('trades/' + tradeID + '/orders');
+        const path = this.getPathPrivate('trades/' + tradeID + '/orders');
         return this.put(path, request);
     }
     //=================
     // POSITIONS
     //=================
     closePositions(instrument, request) {
-        const path = this.getPath('positions/' + instrument + '/close');
+        const path = this.getPathPrivate('positions/' + instrument + '/close');
         return this.put(path, request);
     }
     //=================
     // PRICING
     //=================
     getPricing(params) {
-        const path = this.getPath('pricing');
+        const path = this.getPathPublic('pricing');
         return this.get(path, params);
     }
     getCandles(instrument, params) {
-        const path = this.getPath('instruments/' + instrument + '/candles');
+        const path = this.getPathPublic('instruments/' + instrument + '/candles');
+        return this.get(path, params);
+    }
+    getPositionBook(instrument, params) {
+        const path = this.getPathPublic('instruments/' + instrument + '/positionBook');
         return this.get(path, params);
     }
     //=================
     // INSTRUMENTS
     //=================
     getInstruments() {
-        const path = this.getPath('instruments');
+        const path = this.getPathPublic('instruments');
         return this.get(path, {});
     }
     //=================
     // Get the details of a single instruments position in an Account.
     //=================
     getSingleInstrumentPosition(instrument) {
-        const path = this.getPath('positions/' + instrument);
+        const path = this.getPathPrivate('positions/' + instrument);
         return this.get(path, {});
     }
     //=================
     // Get the details of a single instruments position in an Account.
     //=================
     getAccountSummary() {
-        const path = this.getPath('summary');
+        const path = this.getPathPrivate('summary');
         return this.get(path, {});
-    }
-    getPositionBook(instrument, params) {
-        const path = this.getPath('instruments/' + instrument + '/positionBook');
-        return this.get(path, params);
     }
     //=================
     // METHODS

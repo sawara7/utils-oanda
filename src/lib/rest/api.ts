@@ -57,31 +57,35 @@ export class oaAPIClass extends baseApiClass {
     }
   }
 
-  private getPath(endPoint: string): string{
+  private getPathPrivate(endPoint: string): string{
     return '/v3/accounts/'.concat(this.accountID, '/', endPoint);
+  }
+
+  private getPathPublic(endPoint: string): string{
+    return '/v3/'.concat(this.accountID, '/', endPoint);
   }
 
   //=================
   // ORDER 
   //=================
   public async postOrder(request: BaseOrderRequest): Promise<oaOrderResponse> {
-    const path = this.getPath('orders');
+    const path = this.getPathPrivate('orders');
     await this.sleepWhileOrderInterval(request.instrument)
     return this.post(path, {order: request});
   }
 
   public cancelOrder(orderID: string): Promise<oaCancelOrderResponse> {
-    const path = this.getPath('orders').concat('/', orderID, '/cancel');
+    const path = this.getPathPrivate('orders').concat('/', orderID, '/cancel');
     return this.put(path, {});
   }
 
   public getOrders(request: GetOrderRequest): Promise<OrderResponse> {
-    const path = this.getPath('orders');
+    const path = this.getPathPrivate('orders');
     return this.get(path, request)
   }
 
   public getPendingOrders(): Promise<PendingOrderResponse> {
-    const path = this.getPath('pendingOrders');
+    const path = this.getPathPrivate('pendingOrders');
     return this.get(path, {})
   }
 
@@ -94,12 +98,12 @@ export class oaAPIClass extends baseApiClass {
   // }
 
   public getTransactionByID(id: string): Promise<GetTransactionByIDResponse> {
-    const path = this.getPath('transactions/' + id);
+    const path = this.getPathPrivate('transactions/' + id);
     return this.get(path, {});
   }
 
   public getTransactionsSinceID(request: GetTransactionsSinceIDRequest): Promise<GetTransactionsSinceIDResponse> {
-    const path = this.getPath('transactions/sinceid');
+    const path = this.getPathPrivate('transactions/sinceid');
     return this.get(path, request);
   }
 
@@ -112,17 +116,17 @@ export class oaAPIClass extends baseApiClass {
   // TRADES
   //=================
   public getTrade(request: GetTradeRequest): Promise<GetTradeResponse> {
-    const path = this.getPath('trades');
+    const path = this.getPathPrivate('trades');
     return this.get(path, request);
   }
 
   public getOpenTrade(): Promise<GetTradeResponse> {
-    const path = this.getPath('openTrades');
+    const path = this.getPathPrivate('openTrades');
     return this.get(path, {});
   }
 
   public putTradeOrders(tradeID: string, request: PutTradeOrdersRequest): Promise<PutTradeOrdersResponse> {
-    const path = this.getPath('trades/' + tradeID + '/orders');
+    const path = this.getPathPrivate('trades/' + tradeID + '/orders');
     return this.put(path, request)
   }
 
@@ -130,7 +134,7 @@ export class oaAPIClass extends baseApiClass {
   // POSITIONS
   //=================
   public closePositions(instrument: InstrumentName, request: ClosePositionsRequest): Promise<ClosePositionsResponse> {
-    const path = this.getPath('positions/' + instrument + '/close');
+    const path = this.getPathPrivate('positions/' + instrument + '/close');
     return this.put(path, request)
   }
 
@@ -138,20 +142,25 @@ export class oaAPIClass extends baseApiClass {
   // PRICING
   //=================
   public getPricing(params: GetPricingRequest): Promise<PricingResponse> {
-    const path = this.getPath('pricing');
+    const path = this.getPathPublic('pricing');
     return this.get(path, params);
   }
 
   public getCandles(instrument: InstrumentName, params: GetCandlesRequest): Promise<CandlesResponse> {
-    const path = this.getPath('instruments/' + instrument + '/candles');
+    const path = this.getPathPublic('instruments/' + instrument + '/candles');
     return this.get(path, params);
+  }
+
+  public getPositionBook(instrument: InstrumentName, params: GetPositionBookRequest): Promise<PositionBookResponse> {
+    const path = this.getPathPublic('instruments/' + instrument + '/positionBook')
+    return this.get(path, params)
   }
 
   //=================
   // INSTRUMENTS
   //=================
   public getInstruments(): Promise<InstrumentsResponse> {
-    const path = this.getPath('instruments');
+    const path = this.getPathPublic('instruments');
     return this.get(path, {});
   }
 
@@ -159,7 +168,7 @@ export class oaAPIClass extends baseApiClass {
   // Get the details of a single instruments position in an Account.
   //=================
   public getSingleInstrumentPosition(instrument: InstrumentName): Promise<SingleInstrumentPositionResponse> {
-    const path = this.getPath('positions/' + instrument);
+    const path = this.getPathPrivate('positions/' + instrument);
     return this.get(path, {});
   }
 
@@ -167,13 +176,8 @@ export class oaAPIClass extends baseApiClass {
   // Get the details of a single instruments position in an Account.
   //=================
   public getAccountSummary(): Promise<AccountSummaryResponse> {
-    const path = this.getPath('summary');
+    const path = this.getPathPrivate('summary');
     return this.get(path, {});
-  }
-
-  public getPositionBook(instrument: InstrumentName, params: GetPositionBookRequest): Promise<PositionBookResponse> {
-    const path = this.getPath('instruments/' + instrument + '/positionBook')
-    return this.get(path, params)
   }
 
   //=================

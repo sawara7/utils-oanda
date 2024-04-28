@@ -9,7 +9,8 @@ export declare class oaAPIClass extends baseApiClass {
     private static _lastOrderTime?;
     private _minOrderInterval;
     constructor(config: OANDAApiConfig, options?: ApiOptions);
-    private getPath;
+    private getPathPrivate;
+    private getPathPublic;
     postOrder(request: BaseOrderRequest): Promise<oaOrderResponse>;
     cancelOrder(orderID: string): Promise<oaCancelOrderResponse>;
     getOrders(request: GetOrderRequest): Promise<OrderResponse>;
@@ -22,10 +23,10 @@ export declare class oaAPIClass extends baseApiClass {
     closePositions(instrument: InstrumentName, request: ClosePositionsRequest): Promise<ClosePositionsResponse>;
     getPricing(params: GetPricingRequest): Promise<PricingResponse>;
     getCandles(instrument: InstrumentName, params: GetCandlesRequest): Promise<CandlesResponse>;
+    getPositionBook(instrument: InstrumentName, params: GetPositionBookRequest): Promise<PositionBookResponse>;
     getInstruments(): Promise<InstrumentsResponse>;
     getSingleInstrumentPosition(instrument: InstrumentName): Promise<SingleInstrumentPositionResponse>;
     getAccountSummary(): Promise<AccountSummaryResponse>;
-    getPositionBook(instrument: InstrumentName, params: GetPositionBookRequest): Promise<PositionBookResponse>;
     get<T>(path: string, query?: {}): Promise<any>;
     post<T>(path: string, query: {}): Promise<any>;
     put<T>(path: string, query: {}): Promise<any>;

@@ -142,7 +142,7 @@ class oaAPIClass extends base_1.baseApiClass {
     // INSTRUMENTS
     //=================
     getInstruments() {
-        const path = this.getPathPublic('instruments');
+        const path = this.getPathPrivate('instruments');
         return this.get(path, {});
     }
     //=================

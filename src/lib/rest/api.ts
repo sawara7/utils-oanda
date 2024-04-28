@@ -167,7 +167,7 @@ export class oaAPIClass extends baseApiClass {
   // INSTRUMENTS
   //=================
   public getInstruments(): Promise<InstrumentsResponse> {
-    const path = this.getPathPublic('instruments');
+    const path = this.getPathPrivate('instruments');
     return this.get(path, {});
   }
 

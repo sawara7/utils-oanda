@@ -1,6 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateStopLossOrder = exports.CreateTakerProfitOrder = exports.CreateMarketOrder = exports.CreateLIMITOrder = void 0;
+exports.CreateLIMITOrder = CreateLIMITOrder;
+exports.CreateMarketOrder = CreateMarketOrder;
+exports.CreateTakerProfitOrder = CreateTakerProfitOrder;
+exports.CreateStopLossOrder = CreateStopLossOrder;
 const utils_general_1 = require("utils-general");
 function CreateLIMITOrder(instrument, side, units, price) {
     const p = (0, utils_general_1.floor)(price, instrument.displayPrecision);
@@ -14,7 +17,6 @@ function CreateLIMITOrder(instrument, side, units, price) {
         triggerCondition: 'DEFAULT'
     };
 }
-exports.CreateLIMITOrder = CreateLIMITOrder;
 function CreateMarketOrder(instrument, side, units) {
     const u = (0, utils_general_1.floor)(Math.abs(units), instrument.tradeUnitsPrecision) * (side === "sell" ? -1 : 1);
     return {
@@ -24,7 +26,6 @@ function CreateMarketOrder(instrument, side, units) {
         positionFill: 'DEFAULT'
     };
 }
-exports.CreateMarketOrder = CreateMarketOrder;
 function CreateTakerProfitOrder(instrument, closeSide, units, price, takeProfitRate, isLimit = true) {
     const res = isLimit ? CreateLIMITOrder(instrument, closeSide, units, price) : CreateMarketOrder(instrument, closeSide, units);
     const closeRate = closeSide === "buy" ? 1 + takeProfitRate : 1 - takeProfitRate;
@@ -35,7 +36,6 @@ function CreateTakerProfitOrder(instrument, closeSide, units, price, takeProfitR
     };
     return res;
 }
-exports.CreateTakerProfitOrder = CreateTakerProfitOrder;
 function CreateStopLossOrder(instrument, closeSide, units, price, stopLossRate, isLimit = true) {
     const res = isLimit ? CreateLIMITOrder(instrument, closeSide, units, price) : CreateMarketOrder(instrument, closeSide, units);
     const closeRate = closeSide === "sell" ? 1 + stopLossRate : 1 - stopLossRate;
@@ -46,4 +46,3 @@ function CreateStopLossOrder(instrument, closeSide, units, price, stopLossRate, 
     };
     return res;
 }
-exports.CreateStopLossOrder = CreateStopLossOrder;

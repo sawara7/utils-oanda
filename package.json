@@ -3,23 +3,19 @@
   "version": "0.0.2",
   "main": "dist/index.js",
   "scripts": {
-    "install-rimraf": "npm install --save-dev rimraf",
-    "cleanup": "rimraf package-lock.json && rimraf dist && rimraf node_modules",
-    "build": "npm run install-rimraf && npm run cleanup && npm install && tsc",
-    "tsc": "tsc"
+    "build": "ncu -u && npm install && npm update && tsc",
+    "commit": "git commit -am 'commit' && npm version patch && git push"
   },
   "author": "sawara",
   "license": "MIT",
   "bundleDependencies": [],
   "dependencies": {
-    "axios": "^1.5.1",
-    "querystring": "^0.2.1",
+    "axios": "^1.7.2",
     "utils-general": "github:sawara7/utils-general",
     "utils-trade": "github:sawara7/utils-trade"
   },
   "devDependencies": {
-    "@types/node": "^20.8.3",
-    "rimraf": "^5.0.5",
-    "typescript": "^5.2.2"
+    "@types/node": "^20.14.11",
+    "typescript": "^5.5.3"
   }
 }

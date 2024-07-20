@@ -1,4 +1,3 @@
-import * as querystring from 'querystring';
 import { baseApiClass, ApiOptions } from './base';
 import {
   PricingResponse,
@@ -193,7 +192,7 @@ export class oaAPIClass extends baseApiClass {
   get<T>(path: string, query?: {}) {
     let params = '';
     if (query && Object.keys(query).length) {
-      params += '?' + querystring.stringify(query);
+      params += '?' + (new URLSearchParams(query)).toString();
     }
     const headers = this.makeHeader();
     return super.get(path, query, headers);
